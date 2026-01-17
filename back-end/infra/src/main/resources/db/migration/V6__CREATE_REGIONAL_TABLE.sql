@@ -1,0 +1,8 @@
+CREATE TABLE regional (
+    id INTEGER PRIMARY KEY,
+    secure_id UUID DEFAULT uuid_generate_v4() UNIQUE,
+    nome VARCHAR(200) NOT NULL,
+    ativo BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
