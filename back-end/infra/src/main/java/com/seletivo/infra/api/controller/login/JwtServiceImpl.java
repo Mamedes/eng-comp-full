@@ -4,21 +4,26 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
 public class JwtServiceImpl implements JwtService {
 
-    private final long jwtExpirationInMs = 300000L;
+    private final long jwtExpirationInMs = 3000000L;
     private final long refreshTokenExpirationInMs = 86400000L;
-    private final SecretKey key = Jwts.SIG.HS256.key().build();
-    private final SecretKey keyRefresh = Jwts.SIG.HS256.key().build();
+    private static final String SECRET_STRING = "G1LyKRPljCT7YTlIiYzIEVjC9P1t413A4Fu2ZiKy4gd";
+
+    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
+    private final SecretKey keyRefresh = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
 
     @PostConstruct
     public void post(){
@@ -72,17 +77,17 @@ public class JwtServiceImpl implements JwtService {
         try {
             var jws = Jwts.parser().verifyWith(key).build().parse(token);
             return true;
-        } catch (MalformedJwtException | UnsupportedJwtException | ExpiredJwtException | IllegalArgumentException e) {
+        } catch (MalformedJwtException | UnsupportedJwtException | ExpiredJwtException | IllegalArgumentException |
+                 SignatureException e) {
             return false;
         }
     }
-
     @Override
     public boolean validateRefreshToken(String token) {
         try {
             var jws = Jwts.parser().verifyWith(keyRefresh).build().parse(token);
             return true;
-        } catch (MalformedJwtException | UnsupportedJwtException | ExpiredJwtException | IllegalArgumentException e) {
+        } catch (MalformedJwtException | UnsupportedJwtException | ExpiredJwtException | IllegalArgumentException | SignatureException e) {
             return false;
         }
     }

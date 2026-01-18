@@ -2,10 +2,14 @@ package com.seletivo.infra.configuration.usecases;
 
 import com.seletivo.application.artista.create.CreateArtistaUseCase;
 import com.seletivo.application.artista.create.DefaultCreateArtistaUseCase;
+import com.seletivo.application.artista.delete.DefaultDeleteArtistaUseCase;
+import com.seletivo.application.artista.delete.DeleteArtistaUseCase;
 import com.seletivo.application.artista.fetch.get.DefaultGetArtistaByIdUseCase;
 import com.seletivo.application.artista.fetch.get.GetArtistaByIdUseCase;
 import com.seletivo.application.artista.fetch.list.DefaultListArtistaUseCase;
 import com.seletivo.application.artista.fetch.list.ListArtistaUseCase;
+import com.seletivo.application.artista.update.DefaultUpdateArtistaUseCase;
+import com.seletivo.application.artista.update.UpdateArtistaUseCase;
 import com.seletivo.domain.artista.ArtistaGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,5 +38,15 @@ public class ArtistaUseCaseConfig {
     @Bean
     public ListArtistaUseCase listArtistaUseCase() {
         return new DefaultListArtistaUseCase(artistaGateway);
+    }
+
+    @Bean
+    public UpdateArtistaUseCase updateArtistaUseCase() {
+        return new DefaultUpdateArtistaUseCase(artistaGateway);
+    }
+
+    @Bean
+    public DeleteArtistaUseCase deleteArtistaUseCase() {
+        return new DefaultDeleteArtistaUseCase(artistaGateway);
     }
 }

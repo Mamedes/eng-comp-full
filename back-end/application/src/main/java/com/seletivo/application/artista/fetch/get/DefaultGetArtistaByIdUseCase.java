@@ -6,6 +6,7 @@ import com.seletivo.domain.artista.ArtistaGateway;
 import com.seletivo.domain.artista.ArtistaID;
 import com.seletivo.domain.exceptions.NotFoundException;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public class DefaultGetArtistaByIdUseCase extends GetArtistaByIdUseCase {
@@ -17,15 +18,13 @@ public class DefaultGetArtistaByIdUseCase extends GetArtistaByIdUseCase {
     }
 
     @Override
-    public ArtistaOutput execute(final Long anIn) {
-        final var anArtistaId = ArtistaID.from(anIn);
-
-        return this.artistaGateway.findById(anArtistaId)
+    public ArtistaOutput execute(final UUID aSecureId) {
+        return this.artistaGateway.findBySecureId(aSecureId)
                 .map(ArtistaOutput::from)
-                .orElseThrow(notFound(anArtistaId));
+                .orElseThrow(notFound(aSecureId));
     }
 
-    private Supplier<NotFoundException> notFound(final ArtistaID anId) {
-        return () -> NotFoundException.with(Artista.class, anId);
+    private Supplier<NotFoundException> notFound(final UUID aSecureId) {
+        return () -> NotFoundException.with(Artista.class, aSecureId);
     }
 }

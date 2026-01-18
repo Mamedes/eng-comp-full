@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 
 public record ArtistaListResponse(
-        @JsonProperty("id") Long id,
+     // @JsonProperty("id") Long id,
         @JsonProperty("secure_id") UUID secureId,
         @JsonProperty("nome") String nome,
         @JsonProperty("tipo") String tipo

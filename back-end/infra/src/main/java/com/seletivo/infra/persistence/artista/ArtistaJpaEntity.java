@@ -60,10 +60,9 @@ public class ArtistaJpaEntity {
                 aArtista.getUpdatedAt()
         );
     }
-
     public Artista toAggregate() {
         return Artista.with(
-                this.id != null ? ArtistaID.from(this.id) : null,
+                this.id != null ? ArtistaID.from(this.id, this.secureId.toString()) : null,
                 this.secureId,
                 this.nome,
                 this.tipo,

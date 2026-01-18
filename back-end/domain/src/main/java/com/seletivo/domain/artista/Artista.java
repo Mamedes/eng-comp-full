@@ -44,6 +44,17 @@ public class Artista extends AggregateRoot<ArtistaID> {
         return new Artista(id, secureId, nome, tipo, createdAt, updatedAt);
     }
 
+    public Artista update(final String nome, final String tipo) {
+        return new Artista(
+                this.id,
+                this.secureId,
+                nome,
+                tipo,
+                this.createdAt,
+                Instant.now()
+        );
+    }
+
     @Override
     public void validate(final ValidationHandler handler) {
         new ArtistaValidator(this, handler).validate();

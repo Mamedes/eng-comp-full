@@ -9,7 +9,7 @@ public interface ArtistaApiPresenter {
 
     static ArtistaResponse present(final ArtistaOutput output) {
         return new ArtistaResponse(
-                output.id(),
+             // output.id(),
                 output.secureId(),
                 output.nome(),
                 output.tipo()
@@ -18,7 +18,7 @@ public interface ArtistaApiPresenter {
 
     static ArtistaListResponse present(final ArtistaListOutput output) {
         return new ArtistaListResponse(
-                output.id(),
+           //   output.id(),
                 output.secureId(),
                 output.nome(),
                 output.tipo()

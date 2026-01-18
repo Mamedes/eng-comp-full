@@ -8,8 +8,10 @@ import com.seletivo.domain.pagination.SearchQuery;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class ArtistaPostgresSQLGateway implements ArtistaGateway {
@@ -26,15 +28,19 @@ public class ArtistaPostgresSQLGateway implements ArtistaGateway {
     }
 
     @Override
-    public void deleteById(final ArtistaID anId) {
-        if (this.repository.existsById(anId.getValue())) {
-            this.repository.deleteById(anId.getValue());
-        }
+    @Transactional
+    public void deleteBySecureId(final UUID aSecureId) {
+        this.repository.deleteBySecureId(aSecureId);
     }
 
     @Override
     public Optional<Artista> findById(final ArtistaID anId) {
         return this.repository.findById(anId.getValue())
+                .map(ArtistaJpaEntity::toAggregate);
+    }
+    @Override
+    public Optional<Artista> findBySecureId(final UUID aSecureId) {
+        return this.repository.findBySecureId(aSecureId)
                 .map(ArtistaJpaEntity::toAggregate);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -80,6 +81,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<?> handleSQLIntegrityConstraintViolationException(final SQLIntegrityConstraintViolationException ex) {
         return ResponseEntity.badRequest().body(ApiError.from(ex));
+    }
+
+    @ExceptionHandler(value = MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> handleMethodArgumentTypeMismatchException(final MethodArgumentTypeMismatchException ex) {
+        String error = "O parâmetro '%s' recebeu o valor '%s' que é de um tipo inválido".formatted(
+                ex.getName(), ex.getValue()
+        );
+        return ResponseEntity.badRequest().body(new ApiError(error, null));
     }
 
     record ApiError(String message, List<Error> errors) {

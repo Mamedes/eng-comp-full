@@ -51,7 +51,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             final String jwt = authHeader.substring(7);
+
+            if (!jwtService.validateToken(jwt)) {
+                throw new AuthenticationCredentialsNotFoundException("Token inválido ou expirado.");
+            }
             final String username = jwtService.getUsernameFromToken(jwt);
+
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -7,4 +7,5 @@ import java.util.UUID;
 public interface ArtistaRepository extends JpaRepository<ArtistaJpaEntity, Long> {
 
     Optional<ArtistaJpaEntity> findBySecureId(UUID secureId);
+    void deleteBySecureId(UUID secureId);
 }
