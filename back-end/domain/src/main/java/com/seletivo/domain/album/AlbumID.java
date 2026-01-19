@@ -1,0 +1,41 @@
+package com.seletivo.domain.album;
+
+
+import com.seletivo.domain.Identifier;
+import java.util.Objects;
+
+public final class AlbumID extends Identifier {
+    private final Long value;
+    private final String secureId;
+
+    private AlbumID(final Long value, final String secureId) {
+        this.value = Objects.requireNonNull(value);
+        this.secureId = secureId;
+    }
+
+    public static AlbumID from(final Long anId, final String aSecureId) {
+        return new AlbumID(anId, aSecureId);
+    }
+
+    public Long getValue() {
+        return value;
+    }
+
+    @Override
+    public String getSecureId() {
+        return secureId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AlbumID that = (AlbumID) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
+    }
+}
