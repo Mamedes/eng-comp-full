@@ -2,8 +2,6 @@ package com.seletivo.infra.persistence.album;
 
 import com.seletivo.domain.album.Album;
 import com.seletivo.domain.album.AlbumID;
-import com.seletivo.domain.artista.ArtistaID;
-import com.seletivo.infra.persistence.artista.ArtistaJpaEntity;
 import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.UUID;
@@ -57,7 +55,7 @@ public class AlbumJpaEntity {
                 anAlbum.getId() != null ? anAlbum.getId().getValue() : null,
                 anAlbum.getSecureId() != null ? anAlbum.getSecureId() : null,
                 anAlbum.getTitulo(),
-                anAlbum.getArtistaID() != null ? anAlbum.getArtistaID().getValue() : null,
+                anAlbum.getArtistaID(),
                 anAlbum.getCreatedAt(),
                 anAlbum.getUpdatedAt()
 
@@ -69,7 +67,7 @@ public class AlbumJpaEntity {
                 getId() != null ? AlbumID.from(getId(), null) : null,
                 this.secureId,
                 this.titulo,
-                getArtistaID() != null ? ArtistaID.from(getArtistaID(), null) : null,
+                getArtistaID(),
                 this.createdAt,
                 this.updatedAt
         );

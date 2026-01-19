@@ -6,6 +6,7 @@ import com.seletivo.domain.pagination.SearchQuery;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface AlbumImagemGateway {
 
@@ -20,4 +21,8 @@ public interface AlbumImagemGateway {
     Pagination<AlbumImagem> findAll(SearchQuery aQuery);
 
     List<AlbumImagemID> existsByIds(Iterable<AlbumImagemID> ids);
+
+    Optional<AlbumImagem> findBySecureId(UUID anId);
+
+    List<AlbumImagem> findByAlbumId(Long albumId);
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 public class Album extends AggregateRoot<AlbumID> implements Cloneable{
     private final UUID secureId;
     private String titulo;
-    private final  ArtistaID artistaID;
+    private final  Long artistaID;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -18,7 +18,7 @@ public class Album extends AggregateRoot<AlbumID> implements Cloneable{
             final AlbumID id,
             final UUID secureId,
             final String titulo,
-            final  ArtistaID artistaID,
+            final  Long artistaID,
             final Instant createdAt,
             final Instant updatedAt
     ) {
@@ -30,7 +30,7 @@ public class Album extends AggregateRoot<AlbumID> implements Cloneable{
         this.updatedAt = updatedAt;
     }
 
-    public static Album newAlbum(final String titulo, final ArtistaID artistaID){
+    public static Album newAlbum(final String titulo, final Long artistaID){
         final var now = Instant.now();
         return  new Album(null, UUID.randomUUID(),titulo,artistaID, now, now);
     }
@@ -39,7 +39,7 @@ public class Album extends AggregateRoot<AlbumID> implements Cloneable{
             final AlbumID id,
             final UUID secureId,
             final String titulo,
-            final ArtistaID artistaId,
+            final Long artistaId,
             final Instant createdAt,
             final Instant updatedAt
     ) {
@@ -49,7 +49,7 @@ public class Album extends AggregateRoot<AlbumID> implements Cloneable{
         return with(aAlbum.id,aAlbum.secureId,aAlbum.titulo,aAlbum.artistaID,aAlbum.createdAt,aAlbum.updatedAt);
     }
 
-    public Album update(final String titulo,final ArtistaID artistaId) {
+    public Album update(final String titulo,final Long artistaId) {
         return new Album(
                 this.id,
                 this.secureId,
@@ -73,7 +73,7 @@ public class Album extends AggregateRoot<AlbumID> implements Cloneable{
         return titulo;
     }
 
-    public ArtistaID getArtistaID() {
+    public Long getArtistaID() {
         return artistaID;
     }
 

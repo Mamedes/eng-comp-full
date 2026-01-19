@@ -40,9 +40,9 @@ public class AlbumImagemApiPresenter {
         }
 
         return new AlbumImagemResponse(
-                output.id().getValue(),
+             // output.id().getValue(),
                 output.secureId(),
-                output.albumId(),
+            //  output.albumId(),
                 output.fileName(),
                 output.bucket(),
                 output.contentType(),

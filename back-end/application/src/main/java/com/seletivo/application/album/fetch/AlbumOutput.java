@@ -11,13 +11,11 @@ public record AlbumOutput(
         Instant createdAt,
         Instant updatedAt
 ) {
-    public static AlbumOutput from(final Album anAlbum) {
+    public static AlbumOutput from(final Album anAlbum,  UUID aArtistaId) {
         return new AlbumOutput(
                 anAlbum.getSecureId(),
                 anAlbum.getTitulo(),
-                anAlbum.getArtistaID() != null && anAlbum.getArtistaID().getSecureId() != null
-                        ? UUID.fromString(anAlbum.getArtistaID().getSecureId())
-                        : null,
+                aArtistaId,
                 anAlbum.getCreatedAt(),
                 anAlbum.getUpdatedAt()
         );

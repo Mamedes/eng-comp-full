@@ -35,7 +35,7 @@ public class DefaultCreateAlbumUseCase extends CreateAlbumUseCase {
         }
 
         final var anArtista = oArtista.get();
-        final var anAlbum = Album.newAlbum(aCommand.titulo(), anArtista.getId());
+        final var anAlbum = Album.newAlbum(aCommand.titulo(), anArtista.getId().getValue());
 
         anAlbum.validate(notification);
 

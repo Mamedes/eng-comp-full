@@ -9,7 +9,7 @@ public final class ArtistaID extends Identifier {
 
     private ArtistaID(final Long value, final String secureId) {
         this.value = Objects.requireNonNull(value);
-        this.secureId = Objects.requireNonNull(secureId);
+        this.secureId =secureId;
     }
 
     public static ArtistaID from(final Long anId, final String aSecureId) {

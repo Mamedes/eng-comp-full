@@ -2,13 +2,15 @@ package com.seletivo.application.album.albumImage.create;
 
 import com.seletivo.domain.album.AlbumImagem;
 
-public record CreateAlbumImagemOutput(Long id) {
+import java.util.UUID;
 
-    public static CreateAlbumImagemOutput from(final Long anId) {
+public record CreateAlbumImagemOutput(UUID id) {
+
+    public static CreateAlbumImagemOutput from(final UUID anId) {
         return new CreateAlbumImagemOutput(anId);
     }
 
     public static CreateAlbumImagemOutput from(final AlbumImagem anAlbumImagem) {
-        return new CreateAlbumImagemOutput(anAlbumImagem.getId().getValue());
+        return new CreateAlbumImagemOutput(anAlbumImagem.getSecureId());
     }
 }

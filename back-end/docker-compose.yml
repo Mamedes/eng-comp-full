@@ -4,7 +4,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15
-    container_name: postgres_db
+    container_name: postgres_db_ttl256
     restart: always
     environment:
       POSTGRES_DB: engcomp
@@ -24,8 +24,8 @@ services:
     build:
       context: ./minio
       dockerfile: Dockerfile
-    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
-    container_name: minio_server
+    image: minio/minio:latest
+    container_name: minio_server_ttl256
     restart: always
     environment:
       MINIO_ROOT_USER: admin
@@ -41,7 +41,7 @@ services:
     build:
       context: ./
       dockerfile: infra/Dockerfile
-    container_name: seletivo
+    container_name: seletivo_ttl256
     restart: always
     depends_on:
       - postgres
@@ -61,7 +61,7 @@ services:
 
   nginx:
     image: nginx:1.26-alpine
-    container_name: nginx
+    container_name: nginx_ttl256
     ports:
       - "9003:80"
     volumes:

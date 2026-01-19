@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class AlbumImagemPostgresSQLGateway implements AlbumImagemGateway {
@@ -54,5 +56,18 @@ public class AlbumImagemPostgresSQLGateway implements AlbumImagemGateway {
     @Override
     public List<AlbumImagemID> existsByIds(final Iterable<AlbumImagemID> ids) {
         return List.of();
+    }
+
+    @Override
+    public Optional<AlbumImagem> findBySecureId(final UUID anId) {
+        return this.repository.findBySecureId(anId).map(AlbumImagemJpaEntity::toAggregate);
+    }
+
+    @Override
+    public List<AlbumImagem> findByAlbumId(final Long albumId) {
+        return this.repository.findAllByAlbumId(albumId)
+                .stream()
+                .map(AlbumImagemJpaEntity::toAggregate)
+                .collect(Collectors.toList());
     }
 }

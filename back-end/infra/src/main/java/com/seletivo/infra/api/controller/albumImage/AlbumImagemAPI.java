@@ -2,6 +2,7 @@ package com.seletivo.infra.api.controller.albumImage;
 
 import com.seletivo.infra.api.controller.albumImage.request.CreateAlbumImagemRequest;
 import com.seletivo.infra.api.controller.albumImage.request.UpdateAlbumImagemRequest;
+import com.seletivo.infra.api.controller.albumImage.response.AlbumImagemResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -9,6 +10,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RequestMapping(value = "album-imagem")
 @Tag(name = "Album Imagem")
@@ -26,20 +30,14 @@ public interface AlbumImagemAPI {
     })
     ResponseEntity<?> createImagem(@ModelAttribute CreateAlbumImagemRequest input);
 
-    @GetMapping
-    @Operation(summary = "List all album imagens paginated")
+    @GetMapping(value = "/album/{id}")
+    @Operation(summary = "List all images from a specific album")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listed successfully"),
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    void listImagens(
-            @RequestParam(name = "search", required = false, defaultValue = "") final String search,
-            @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
-            @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
-            @RequestParam(name = "sort", required = false, defaultValue = "createdAt") final String sort,
-            @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
-    );
+    List<AlbumImagemResponse> listByAlbum(@PathVariable(name = "id") UUID album_id);
 
     @GetMapping(
             value = "{id}",
@@ -51,7 +49,7 @@ public interface AlbumImagemAPI {
             @ApiResponse(responseCode = "404", description = "Album Imagem was not found"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    void getById(@PathVariable(name = "id") Long id);
+    AlbumImagemResponse getById(@PathVariable(name = "id") UUID id);
 
     @PutMapping(
             value = "{id}",

@@ -2,6 +2,7 @@ package com.seletivo.application.album.albumImage.create;
 
 import com.seletivo.application.arquivo.ArquivoDTO;
 import com.seletivo.application.utils.FileUtils;
+import com.seletivo.domain.album.AlbumGateway;
 import com.seletivo.domain.album.AlbumImagem;
 import com.seletivo.domain.album.AlbumImagemGateway;
 import com.seletivo.domain.arquivo.ArquivoStorageGateway;
@@ -21,14 +22,16 @@ public class DefaultCreateAlbumImagemUseCase extends CreateAlbumImagemUseCase {
 
     private final AlbumImagemGateway albumImagemGateway;
     private final ArquivoStorageGateway arquivoStorageGateway;
-    // private final AlbumGateway albumGateway; // Adicionar se houver validação de existência do álbum
+    private final AlbumGateway albumGateway;
 
     public DefaultCreateAlbumImagemUseCase(
             final AlbumImagemGateway albumImagemGateway,
-            final ArquivoStorageGateway arquivoStorageGateway
+            final ArquivoStorageGateway arquivoStorageGateway,
+            final AlbumGateway albumGateway
     ) {
         this.albumImagemGateway = Objects.requireNonNull(albumImagemGateway);
         this.arquivoStorageGateway = Objects.requireNonNull(arquivoStorageGateway);
+        this.albumGateway = Objects.requireNonNull(albumGateway);
     }
 
     @Override
@@ -45,14 +48,15 @@ public class DefaultCreateAlbumImagemUseCase extends CreateAlbumImagemUseCase {
         final List<CreateAlbumImagemOutput> outputs = new ArrayList<>();
         final List<String> arquivosEnviados = new ArrayList<>();
 
+        final var oAlbum = this.albumGateway.findBySecureId(aCommand.albumId());
+
         try {
             for (ArquivoDTO arquivoDTO : arquivos) {
                 final String randomHash = FileUtils.generateRandomHash();
                 final String bucketPath = "album-" + albumId + "/" + randomHash + "." + FileUtils.getFileExtension(arquivoDTO.nomeArquivo());
 
-                // Cria o objeto de domínio seguindo o padrão da migration SQL
                 final var anAlbumImagem = AlbumImagem.newAlbumImagem(
-                        albumId,
+                        oAlbum.get().getId().getValue(),
                         arquivoDTO.nomeArquivo(),
                         bucketPath,
                         arquivoDTO.tipoConteudo()
