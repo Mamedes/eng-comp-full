@@ -21,6 +21,7 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private  final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private  final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final RateLimitingFilter rateLimitingFilter;
 
 
 
@@ -28,13 +29,15 @@ public class SecurityConfig {
             JwtAuthenticationFilter jwtAuthenticationFilter,
             UserDetailsService userDetailsService,
             CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
-            CustomAccessDeniedHandler customAccessDeniedHandler
+            CustomAccessDeniedHandler customAccessDeniedHandler,
+            RateLimitingFilter rateLimitingFilter
 
     ) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.userDetailsService = userDetailsService;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
         this.customAccessDeniedHandler = customAccessDeniedHandler;
+        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     @Bean
@@ -69,6 +72,7 @@ public class SecurityConfig {
                 .httpBasic(h -> h.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitingFilter, JwtAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
                 .build();
     }
