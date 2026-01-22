@@ -27,7 +27,7 @@ public class AuthController implements AutenticacaoAPI {
     public ResponseEntity<?> login(LoginRequest input) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        input.login(),
+                        input.username(),
                         input.password()
                 )
         );
