@@ -1,6 +1,6 @@
 package com.seletivo.infra.configuration.usecases;
 
-import com.seletivo.application.album.fetch.projection.ListArtistaProjectionDashboardUseCase;
+import com.seletivo.application.album.fetch.projection.ListArtistaViewUseCase;
 import com.seletivo.application.artista.create.CreateArtistaUseCase;
 import com.seletivo.application.artista.create.DefaultCreateArtistaUseCase;
 import com.seletivo.application.artista.delete.DefaultDeleteArtistaUseCase;
@@ -55,7 +55,7 @@ public class ArtistaUseCaseConfig {
     }
 
     @Bean
-    public ListArtistaProjectionDashboardUseCase listArtistaProjectionDashboardUseCase() {
-        return new ListArtistaProjectionDashboardUseCase(artistaQueryGateway);
+    public ListArtistaViewUseCase listArtistaProjectionDashboardUseCase() {
+        return new ListArtistaViewUseCase(artistaQueryGateway);
     }
 }

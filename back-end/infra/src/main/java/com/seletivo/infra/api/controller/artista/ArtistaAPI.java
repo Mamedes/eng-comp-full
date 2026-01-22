@@ -1,5 +1,6 @@
 package com.seletivo.infra.api.controller.artista;
 
+import com.seletivo.application.album.fetch.projection.ArtistaListViewOutput;
 import com.seletivo.domain.pagination.Pagination;
 import com.seletivo.infra.api.controller.artista.request.CreateArtistaRequest;
 import com.seletivo.infra.api.controller.artista.request.UpdateArtistaRequest;
@@ -77,6 +78,20 @@ public interface ArtistaAPI {
             @ApiResponse(responseCode = "500",
                     description = "An internal server error was thrown"),})
     void deleteById(@PathVariable(name = "id") UUID id);
+
+    @GetMapping(value = "/dashboard", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "List artistas with album count")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listed successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal Error"),
+    })
+    Pagination<ArtistaListViewOutput> listArtistasDashboard(
+            @RequestParam(name = "search", required = false, defaultValue = "") String search,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "perPage", required = false, defaultValue = "10") int perPage,
+            @RequestParam(name = "sort", required = false, defaultValue = "nome") String sort,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") String direction
+    );
 
 
 }
