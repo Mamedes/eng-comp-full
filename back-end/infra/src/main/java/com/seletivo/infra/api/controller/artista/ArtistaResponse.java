@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record ArtistaResponse(
    //   @JsonProperty("id") Long id,
-        @JsonProperty("secure_id") UUID secureId,
+        @JsonProperty("artistaId") UUID artistaId,
         @JsonProperty("nome") String nome,
         @JsonProperty("tipo") String tipo
 ) {
