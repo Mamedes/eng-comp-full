@@ -29,8 +29,8 @@ export interface PaginatedResponse<T> {
 }
 
 export interface AuthResponse {
-  accessToken: string; 
-  refreshToken: string; 
+  accessToken: string;
+  refreshToken: string;
   expiresIn?: number;
 }
 
@@ -49,7 +49,7 @@ export interface AlbumFormData {
 }
 
 export interface Artist {
-  secure_id: string; // ID único do serviço
+  artistaId: string;
   nome: string;
   tipo: string;
 }
@@ -59,4 +59,11 @@ export interface PaginatedResponse<T> {
   perPage: number;
   total: number;
   items: T[];
+}
+
+export interface ArtistaDashboard {
+  artistaId: string;
+  nome: string;
+  tipo: string;
+  quantidadeAlbuns: number;
 }

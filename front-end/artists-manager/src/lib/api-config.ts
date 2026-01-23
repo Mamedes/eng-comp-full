@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
   // Artists
   artists: "/artista",
   artistById: (id: number) => `/artista/${id}`,
+  artistsDashboard: "/artista/dashboard",
 
   // Albums
   albums: "/album",
