@@ -69,15 +69,7 @@ public class AlbumPostgresSQLGateway implements AlbumGateway {
     }
 
     private Album save(final Album anAlbum) {
-        final var entity = AlbumJpaEntity.from(anAlbum);
-        final var savedEntity = this.repository.saveAndFlush(entity);
-        return Album.with(
-                AlbumID.from(savedEntity.getId(), anAlbum.getSecureId().toString()),
-                savedEntity.getSecureId(),
-                savedEntity.getTitulo(),
-                anAlbum.getArtistaID(),
-                savedEntity.getCreatedAt(),
-                savedEntity.getUpdatedAt()
-        );
+        return this.repository.saveAndFlush(AlbumJpaEntity.from(anAlbum))
+                .toAggregate();
     }
 }

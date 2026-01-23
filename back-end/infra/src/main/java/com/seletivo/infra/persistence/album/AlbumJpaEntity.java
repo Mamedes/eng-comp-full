@@ -2,9 +2,12 @@ package com.seletivo.infra.persistence.album;
 
 import com.seletivo.domain.album.Album;
 import com.seletivo.domain.album.AlbumID;
+import com.seletivo.domain.artista.ArtistaID;
 import jakarta.persistence.*;
 import java.time.Instant;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity(name = "Album")
 @Table(name = "album")
@@ -22,8 +25,10 @@ public class AlbumJpaEntity {
     @Column(name = "titulo", nullable = false)
     private String titulo;
 
-    @Column(name = "artista_id", nullable = false)
-    private Long artistaID;
+    @ElementCollection
+    @CollectionTable(name = "album_artista", joinColumns = @JoinColumn(name = "album_id"))
+    @Column(name = "artista_id")
+    private Set<Long> artistaIds;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -34,18 +39,18 @@ public class AlbumJpaEntity {
     public AlbumJpaEntity() {
     }
 
-    public AlbumJpaEntity(
+    private AlbumJpaEntity(
             final Long id,
             final UUID secureId,
             final String titulo,
-            final Long artistaID,
+            final Set<Long> artistaIds,
             final Instant createdAt,
             final Instant updatedAt
     ) {
         this.id = id;
         this.secureId = secureId;
         this.titulo = titulo;
-        this.artistaID =artistaID;
+        this.artistaIds = artistaIds;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -53,21 +58,19 @@ public class AlbumJpaEntity {
     public static AlbumJpaEntity from(final Album anAlbum) {
         return new AlbumJpaEntity(
                 anAlbum.getId() != null ? anAlbum.getId().getValue() : null,
-                anAlbum.getSecureId() != null ? anAlbum.getSecureId() : null,
+                anAlbum.getSecureId(),
                 anAlbum.getTitulo(),
-                anAlbum.getArtistaID(),
+                anAlbum.getArtistas().stream().map(ArtistaID::getValue).collect(Collectors.toSet()),
                 anAlbum.getCreatedAt(),
                 anAlbum.getUpdatedAt()
-
         );
-
     }
     public Album toAggregate() {
         return Album.with(
-                getId() != null ? AlbumID.from(getId(), null) : null,
+                AlbumID.from(this.id, this.secureId.toString()),
                 this.secureId,
                 this.titulo,
-                getArtistaID(),
+                this.artistaIds.stream().map(id -> ArtistaID.from(id, null)).collect(Collectors.toSet()),
                 this.createdAt,
                 this.updatedAt
         );
@@ -96,12 +99,12 @@ public class AlbumJpaEntity {
         this.titulo = titulo;
     }
 
-    public Long getArtistaID() {
-        return artistaID;
+    public Set<Long> getArtistaIds() {
+        return artistaIds;
     }
 
-    public void setArtistaID(Long artistaID) {
-        this.artistaID = artistaID;
+    public void setArtistaIds(Set<Long> artistaIds) {
+        this.artistaIds = artistaIds;
     }
 
     public Instant getCreatedAt() {

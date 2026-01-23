@@ -4,7 +4,9 @@ import com.seletivo.application.album.create.CreateAlbumCommand;
 import com.seletivo.application.album.create.CreateAlbumOutput;
 import com.seletivo.application.album.create.CreateAlbumUseCase;
 import com.seletivo.application.album.delete.DeleteAlbumUseCase;
+import com.seletivo.application.album.fetch.AlbumArtistaListView;
 import com.seletivo.application.album.fetch.get.GetAlbumByIdUseCase;
+import com.seletivo.application.album.fetch.list.ListAlbumArtistaUseCase;
 import com.seletivo.application.album.fetch.list.ListAlbumUseCase;
 import com.seletivo.application.album.update.UpdateAlbumCommand;
 import com.seletivo.application.album.update.UpdateAlbumOutput;
@@ -31,19 +33,22 @@ public class AlbumController implements AlbumAPI {
     private final ListAlbumUseCase listAlbumUseCase;
     private final UpdateAlbumUseCase updateAlbumUseCase;
     private final DeleteAlbumUseCase deleteAlbumUseCase;
+    private final ListAlbumArtistaUseCase listAlbumArtistaUseCase;
 
     public AlbumController(
             final CreateAlbumUseCase createAlbumUseCase,
             final GetAlbumByIdUseCase getAlbumByIdUseCase,
             final ListAlbumUseCase listAlbumUseCase,
             final UpdateAlbumUseCase updateAlbumUseCase,
-            final DeleteAlbumUseCase deleteAlbumUseCase
+            final DeleteAlbumUseCase deleteAlbumUseCase,
+            final ListAlbumArtistaUseCase listAlbumArtistaUseCase
     ) {
         this.createAlbumUseCase = Objects.requireNonNull(createAlbumUseCase);
         this.getAlbumByIdUseCase = Objects.requireNonNull(getAlbumByIdUseCase);
         this.listAlbumUseCase = Objects.requireNonNull(listAlbumUseCase);
         this.updateAlbumUseCase = Objects.requireNonNull(updateAlbumUseCase);
         this.deleteAlbumUseCase = Objects.requireNonNull(deleteAlbumUseCase);
+        this.listAlbumArtistaUseCase = Objects.requireNonNull(listAlbumArtistaUseCase);
 
     }
 
@@ -51,7 +56,7 @@ public class AlbumController implements AlbumAPI {
     public ResponseEntity<?> createAlbum(final CreateAlbumRequest input) {
         final var aCommand = CreateAlbumCommand.with(
                 input.titulo(),
-                input.artistaId()
+                input.artistasIds()
         );
 
         final Function<Notification, ResponseEntity<?>> onError = notification ->
@@ -79,7 +84,7 @@ public class AlbumController implements AlbumAPI {
 
     @Override
     public ResponseEntity<?> updateById(final UUID id, final UpdateAlbumRequest input) {
-        final var aCommand = UpdateAlbumCommand.with(id, input.titulo(), input.artistaId());
+        final var aCommand = UpdateAlbumCommand.with(id, input.titulo(), input.artistasIds());
 
         final Function<Notification, ResponseEntity<?>> onError = notification ->
                 ResponseEntity.unprocessableEntity().body(notification);
@@ -92,6 +97,19 @@ public class AlbumController implements AlbumAPI {
     @Override
     public void deleteById(final UUID id) {
         this.deleteAlbumUseCase.execute(id);
+    }
+
+    @Override
+    public Pagination<AlbumArtistaListView> listAlbumsWithArtistas(
+            final String search,
+            final int page,
+            final int perPage,
+            final String sort,
+            final String direction
+    ) {
+        return this.listAlbumArtistaUseCase.execute(
+                new SearchQuery(page, perPage, search, sort, direction)
+        );
     }
 
 
