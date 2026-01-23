@@ -20,9 +20,9 @@ public interface ArtistaRepository extends JpaRepository<ArtistaJpaEntity, Long>
             a.secure_id AS secureId,
             a.nome AS nome,
             a.tipo AS tipo,
-            COUNT(al.id) AS quantidadeAlbuns
+            COUNT(aa.album_id) AS quantidadeAlbuns
         FROM artista a
-        LEFT JOIN album al ON a.id = al.artista_id
+        LEFT JOIN album_artista aa ON a.id = aa.artista_id
         WHERE (:nome IS NULL OR a.nome ILIKE %:nome%)
         GROUP BY a.id, a.secure_id, a.nome, a.tipo
     """,
