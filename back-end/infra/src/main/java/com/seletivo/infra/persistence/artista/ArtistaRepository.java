@@ -7,14 +7,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 public interface ArtistaRepository extends JpaRepository<ArtistaJpaEntity, Long> {
 
     Optional<ArtistaJpaEntity> findBySecureId(UUID secureId);
     void deleteBySecureId(UUID secureId);
-
+    @Query("SELECT a.id FROM Artista a WHERE a.secureId IN :secureIds")
+    List<Long> findAllBySecureIds(@Param("secureIds") Set<UUID> secureIds);
     @Query(value = """
         SELECT
             a.secure_id AS secureId,
