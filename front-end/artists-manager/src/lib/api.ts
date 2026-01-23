@@ -6,9 +6,13 @@ import type {
   PaginatedResponse,
   ArtistFormData,
   AlbumFormData,
+  GetArtistsParams,
+  AlbumFilters,
+  AlbumDashboardItem,
+  CreateAlbumDTO,
+  AlbumImage,
 } from "./types";
 
-// Generic fetch wrapper
 async function fetchApi<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -33,18 +37,43 @@ async function fetchApi<T>(
     throw new Error(error || `HTTP error! status: ${response.status}`);
   }
 
-  // Handle empty responses
   const text = await response.text();
   return text ? JSON.parse(text) : null;
 }
+export async function deleteArtist(
+  id: string,
+  token: string | null,
+): Promise<void> {
+  await fetchApi(`/artista/${id}`, { method: "DELETE" }, token);
+}
 
-// Artists API
-export interface GetArtistsParams {
-  search?: string;
-  page?: number;
-  perPage?: number;
-  sort?: string;
-  dir?: "asc" | "desc";
+export async function createArtist(
+  data: ArtistFormData,
+  token: string | null,
+): Promise<Artist> {
+  return fetchApi<Artist>(
+    "/artista",
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    },
+    token,
+  );
+}
+
+export async function updateArtist(
+  id: string,
+  data: Artist,
+  token: string | null,
+): Promise<Artist> {
+  return fetchApi<Artist>(
+    `/artista/${id}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(data),
+    },
+    token,
+  );
 }
 
 export async function getArtists(
@@ -76,7 +105,7 @@ export async function getArtistsDashboard(
   searchParams.set("sort", params.sort || "quantidadeAlbuns");
   searchParams.set("dir", params.dir || "desc");
 
-  return fetchApi<PaginatedResponse<Artist>>(
+  return fetchApi<PaginatedResponse<ArtistaDashboard>>(
     `/artista/dashboard?${searchParams.toString()}`,
     {},
     token,
@@ -88,35 +117,6 @@ export async function getArtistById(
   token?: string | null,
 ): Promise<Artist> {
   return fetchApi<Artist>(API_ENDPOINTS.artistById(id), {}, token);
-}
-
-export async function createArtist(
-  data: ArtistFormData,
-  token?: string | null,
-): Promise<Artist> {
-  return fetchApi<Artist>(
-    API_ENDPOINTS.artists,
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-    },
-    token,
-  );
-}
-
-export async function updateArtist(
-  id: number,
-  data: ArtistFormData,
-  token?: string | null,
-): Promise<Artist> {
-  return fetchApi<Artist>(
-    API_ENDPOINTS.artistById(id),
-    {
-      method: "PUT",
-      body: JSON.stringify(data),
-    },
-    token,
-  );
 }
 
 // Albums API
@@ -145,19 +145,6 @@ export async function getAlbumById(
   return fetchApi<Album>(API_ENDPOINTS.albumById(id), {}, token);
 }
 
-export async function createAlbum(
-  data: AlbumFormData,
-  token?: string | null,
-): Promise<Album> {
-  return fetchApi<Album>(
-    API_ENDPOINTS.albums,
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-    },
-    token,
-  );
-}
 
 export async function updateAlbum(
   id: number,
@@ -202,4 +189,49 @@ export async function uploadAlbumCover(
   }
 
   return response.json();
+}
+
+// ... imports existentes
+
+// --- ÁLBUNS ---
+
+export async function getAlbumsDashboard(
+  params: AlbumFilters,
+  token: string | null,
+) {
+  // Constrói a Query String
+  const query = new URLSearchParams({
+    page: params.page.toString(),
+    perPage: params.perPage.toString(),
+    sort: params.sort,
+    dir: params.dir,
+    ...(params.search && { search: params.search }), // Adiciona busca se existir
+  }).toString();
+
+  return fetchApi<PaginatedResponse<AlbumDashboardItem>>(
+    `/album/details?${query}`,
+    {},
+    token,
+  );
+}
+
+export async function createAlbum(data: CreateAlbumDTO, token: string | null) {
+  return fetchApi<any>(
+    "/album",
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    },
+    token,
+  );
+}
+
+export async function getAlbumImages(albumId: string, token: string | null) {
+  return fetchApi<AlbumImage[]>(
+    `/album-imagem/album/${albumId}`,
+    {
+      method: "GET",
+    },
+    token,
+  );
 }

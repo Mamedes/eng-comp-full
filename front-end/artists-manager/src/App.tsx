@@ -6,6 +6,8 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import LoginPage from './app/login/LoginPage'
 import { Loader2 } from 'lucide-react'
+import AlbumsPage from './app/album/page'
+import { AppLayout } from './app/components/AppLayout'
 
 function PrivateRoute({ children }: { children: JSX.Element }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -24,20 +26,16 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
 
   return children;
 }
-
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <HomePage />
-            </PrivateRoute>
-          }
-        />
+
+        <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/albums" element={<AlbumsPage />} />
+        </Route>
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </BrowserRouter>

@@ -1,8 +1,12 @@
+export type ArtistType = "SOLO" | "BANDA" | "DUPLA";
 export interface Artist {
-  id: number;
+  artistaId: string;
   nome: string;
-  totalAlbuns?: number;
-  albuns?: Album[];
+  tipo: ArtistType;
+}
+export interface ArtistFormData {
+  nome: string;
+  tipo: ArtistType;
 }
 
 export interface Album {
@@ -47,13 +51,6 @@ export interface AlbumFormData {
   nome: string;
   artistaId: number;
 }
-
-export interface Artist {
-  artistaId: string;
-  nome: string;
-  tipo: string;
-}
-
 export interface PaginatedResponse<T> {
   currentPage: number;
   perPage: number;
@@ -66,4 +63,44 @@ export interface ArtistaDashboard {
   nome: string;
   tipo: string;
   quantidadeAlbuns: number;
+}
+
+export interface ArtistFormData {
+  nome: string;
+  tipo: string;
+}
+export interface GetArtistsParams {
+  search?: string;
+  page?: number;
+  perPage?: number;
+  sort?: string;
+  dir?: "asc" | "desc";
+}
+
+
+export interface AlbumDashboardItem {
+  albumId: string;
+  albumTitulo: string;
+  artistaNome: string;
+  artistaTipo: string;
+}
+
+export interface AlbumImage {
+  secureId: string;
+  fileName: string;
+  linkTemporario: string; 
+  createdAt: string;
+}
+
+export interface CreateAlbumDTO {
+  titulo: string;
+  artistas_ids: string[]; 
+}
+
+export interface AlbumFilters {
+  page: number;
+  perPage: number;
+  sort: string;
+  dir: "asc" | "desc";
+  search?: string;
 }
