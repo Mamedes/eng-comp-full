@@ -8,6 +8,7 @@ import com.seletivo.domain.validation.Error;
 import com.seletivo.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
+import java.util.HashSet;
 import java.util.Objects;
 
 import static io.vavr.API.Left;
@@ -26,17 +27,15 @@ public class DefaultCreateAlbumUseCase extends CreateAlbumUseCase {
     @Override
     public Either<Notification, CreateAlbumOutput> execute(final CreateAlbumCommand aCommand) {
         final var notification = Notification.create();
+        final var artistasIdsComand = aCommand.artistasIds();
 
-        final var oArtista = this.artistaGateway.findBySecureId(aCommand.artistaID());
+        final var artistasFind = this.artistaGateway.existsBySecureIds(artistasIdsComand);
 
-        if (oArtista.isEmpty()) {
-            notification.append(new Error("Artista com ID %s não foi encontrado".formatted(aCommand.artistaID())));
+        if (artistasFind.size() != artistasIdsComand.size()) {
+            notification.append(new Error("Um ou mais artistas não foram encontrados"));
             return Left(notification);
         }
-
-        final var anArtista = oArtista.get();
-        final var anAlbum = Album.newAlbum(aCommand.titulo(), anArtista.getId().getValue());
-
+        final var anAlbum = Album.newAlbum(aCommand.titulo(), new HashSet<>(artistasFind));
         anAlbum.validate(notification);
 
         return notification.hasError() ? Left(notification) : create(anAlbum);

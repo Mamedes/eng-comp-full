@@ -2,13 +2,13 @@ package com.seletivo.application.album.update;
 
 import com.seletivo.domain.album.Album;
 import com.seletivo.domain.album.AlbumGateway;
-import com.seletivo.domain.artista.Artista;
 import com.seletivo.domain.artista.ArtistaGateway;
-import com.seletivo.domain.artista.ArtistaID;
 import com.seletivo.domain.exceptions.NotFoundException;
+import com.seletivo.domain.validation.Error;
 import com.seletivo.domain.validation.handler.Notification;
 import io.vavr.control.Either;
 
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -29,22 +29,24 @@ public class DefaultUpdateAlbumUseCase extends UpdateAlbumUseCase {
     @Override
     public Either<Notification, UpdateAlbumOutput> execute(final UpdateAlbumCommand aCommand) {
         final var aSecureId = aCommand.secureId();
+        final var artistasIDs = aCommand.artistasIDs();
+        final var notification = Notification.create();
+
 
         final var anAlbum = this.albumGateway.findBySecureId(aSecureId)
                 .orElseThrow(notFound(aSecureId));
 
-        ArtistaID artistaId = null;
-        if (aCommand.artistaId() != null) {
-            artistaId = artistaGateway.findBySecureId(aCommand.artistaId())
-                    .map(Artista::getId)
-                    .orElse(null);
+        final var artistasFind = this.artistaGateway.existsBySecureIds(artistasIDs);
 
+        if (artistasFind.size() != artistasIDs.size()) {
+            notification.append(new Error("Um ou mais artistas não foram encontrados."));
+            return Left(notification);
         }
 
-        final var notification = Notification.create();
-
-        final var albumAtualizado = anAlbum.update(aCommand.titulo(), artistaId.getValue());
-
+        final var albumAtualizado = anAlbum.update(
+                aCommand.titulo(),
+                new HashSet<>(artistasFind)
+        );
         albumAtualizado.validate(notification);
 
         return notification.hasError() ? Left(notification) : update(albumAtualizado);

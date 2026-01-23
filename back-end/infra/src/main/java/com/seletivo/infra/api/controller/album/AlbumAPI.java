@@ -1,6 +1,7 @@
 package com.seletivo.infra.api.controller.album;
 
 
+import com.seletivo.application.album.fetch.AlbumArtistaListView;
 import com.seletivo.domain.pagination.Pagination;
 import com.seletivo.infra.api.controller.album.request.CreateAlbumRequest;
 import com.seletivo.infra.api.controller.album.request.UpdateAlbumRequest;
@@ -75,4 +76,19 @@ public interface AlbumAPI {
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
     void deleteById(@PathVariable(name = "id") UUID id);
+
+    @GetMapping(value = "details", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "List albums with artist details (Name and Type)")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Listed successfully"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+    })
+    Pagination<AlbumArtistaListView> listAlbumsWithArtistas(
+            @RequestParam(name = "search", required = false, defaultValue = "") String search,
+            @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(name = "perPage", required = false, defaultValue = "10") int perPage,
+            @RequestParam(name = "sort", required = false, defaultValue = "titulo") String sort,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") String direction
+    );
 }
+

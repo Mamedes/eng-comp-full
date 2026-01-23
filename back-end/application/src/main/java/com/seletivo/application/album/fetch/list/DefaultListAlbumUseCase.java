@@ -1,13 +1,16 @@
 package com.seletivo.application.album.fetch.list;
 
-
 import com.seletivo.application.album.fetch.AlbumListOutput;
 import com.seletivo.domain.album.AlbumGateway;
+import com.seletivo.domain.artista.Artista;
 import com.seletivo.domain.artista.ArtistaGateway;
-import com.seletivo.domain.artista.ArtistaID;
 import com.seletivo.domain.pagination.Pagination;
 import com.seletivo.domain.pagination.SearchQuery;
+
 import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class DefaultListAlbumUseCase extends ListAlbumUseCase {
 
@@ -24,11 +27,14 @@ public class DefaultListAlbumUseCase extends ListAlbumUseCase {
         final var albums = this.albumGateway.findAll(aQuery);
 
         return albums.map(album -> {
-            final var artistaUUID = this.artistaGateway.findById(ArtistaID.from(album.getArtistaID(), null))
-                    .map(artista -> artista.getSecureId())
-                    .orElse(null);
+            final Set<UUID> artistasUUIDs = album.getArtistas().stream()
+                    .map(artistaId -> this.artistaGateway.findById(artistaId)
+                            .map(Artista::getSecureId)
+                            .orElse(null))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
 
-            return AlbumListOutput.from(album, artistaUUID);
+            return AlbumListOutput.from(album, artistasUUIDs);
         });
     }
 }

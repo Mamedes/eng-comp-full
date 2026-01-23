@@ -10,7 +10,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -69,5 +71,12 @@ public class ArtistaPostgresSQLGateway implements ArtistaGateway {
 
     private Artista save(final Artista anArtista) {
         return this.repository.save(ArtistaJpaEntity.from(anArtista)).toAggregate();
+    }
+
+    @Override
+    public List<ArtistaID> existsBySecureIds(final Set<UUID> secureIds) {
+        return this.repository.findAllBySecureIds(secureIds).stream()
+                .map(id -> ArtistaID.from(id, null))
+                .toList();
     }
 }

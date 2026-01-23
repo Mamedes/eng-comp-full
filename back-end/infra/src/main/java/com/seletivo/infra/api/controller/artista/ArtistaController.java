@@ -1,5 +1,7 @@
 package com.seletivo.infra.api.controller.artista;
 
+import com.seletivo.application.album.fetch.projection.ArtistaListViewOutput;
+import com.seletivo.application.album.fetch.projection.ListArtistaViewUseCase;
 import com.seletivo.application.artista.create.CreateArtistaCommand;
 import com.seletivo.application.artista.create.CreateArtistaOutput;
 import com.seletivo.application.artista.create.CreateArtistaUseCase;
@@ -31,19 +33,22 @@ public class ArtistaController implements ArtistaAPI {
     private final ListArtistaUseCase  listArtistaUseCase;
     private final UpdateArtistaUseCase updateArtistaUseCase;
     private final DeleteArtistaUseCase deleteArtistaUseCase;
+    private final ListArtistaViewUseCase listArtistaDashboardUseCase;
 
     public ArtistaController(
             final CreateArtistaUseCase createArtistaUseCase,
             final GetArtistaByIdUseCase getArtistaByIdUseCase,
             final ListArtistaUseCase listArtistaUseCase,
             final UpdateArtistaUseCase updateArtistaUseCase,
-            final DeleteArtistaUseCase deleteArtistaUseCase
+            final DeleteArtistaUseCase deleteArtistaUseCase,
+            final ListArtistaViewUseCase listArtistaDashboardUseCase
     ) {
         this.createArtistaUseCase = Objects.requireNonNull(createArtistaUseCase);
         this.getArtistaByIdUseCase = Objects.requireNonNull(getArtistaByIdUseCase);
         this.listArtistaUseCase = Objects.requireNonNull(listArtistaUseCase);
         this.updateArtistaUseCase = Objects.requireNonNull(updateArtistaUseCase);
         this.deleteArtistaUseCase = Objects.requireNonNull(deleteArtistaUseCase);
+        this.listArtistaDashboardUseCase = Objects.requireNonNull(listArtistaDashboardUseCase);
     }
 
     @Override
@@ -54,7 +59,7 @@ public class ArtistaController implements ArtistaAPI {
                 notification -> ResponseEntity.unprocessableEntity().body(notification);
 
         final Function<CreateArtistaOutput, ResponseEntity<?>> onSuccess =
-                output -> ResponseEntity.created(URI.create("/artista/" + output.id())).body(output);
+                output -> ResponseEntity.created(URI.create("/artista/" + output.artistaId())).body(output);
 
         return this.createArtistaUseCase.execute(aCommand).fold(onError, onSuccess);
     }
@@ -92,5 +97,14 @@ public class ArtistaController implements ArtistaAPI {
     @Override
     public void deleteById(UUID id) {
         deleteArtistaUseCase.execute(id);
+    }
+
+    @Override
+    public Pagination<ArtistaListViewOutput> listArtistasDashboard(
+            String search, int page, int perPage, String sort, String direction
+    ) {
+        return this.listArtistaDashboardUseCase.execute(
+                new SearchQuery(page, perPage, search, sort, direction)
+        );
     }
 }

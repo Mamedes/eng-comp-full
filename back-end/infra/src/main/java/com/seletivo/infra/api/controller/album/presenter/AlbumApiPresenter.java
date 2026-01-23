@@ -12,7 +12,7 @@ public interface AlbumApiPresenter {
         return new AlbumResponse(
                 output.secureId(),
                 output.titulo(),
-                output.artistaId()
+                output.artistasIds()
         );
     }
 
@@ -20,7 +20,7 @@ public interface AlbumApiPresenter {
         return new AlbumListResponse(
                 output.secureId(),
                 output.titulo(),
-                output.artistaId()
+                output.artistasIds()
         );
     }
 }

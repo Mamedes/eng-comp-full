@@ -6,10 +6,13 @@ import com.seletivo.application.album.delete.DefaultDeleteAlbumUseCase;
 import com.seletivo.application.album.delete.DeleteAlbumUseCase;
 import com.seletivo.application.album.fetch.get.DefaultGetAlbumByIdUseCase;
 import com.seletivo.application.album.fetch.get.GetAlbumByIdUseCase;
+import com.seletivo.application.album.fetch.list.DefaultListAlbumArtistaUseCase;
 import com.seletivo.application.album.fetch.list.DefaultListAlbumUseCase;
+import com.seletivo.application.album.fetch.list.ListAlbumArtistaUseCase;
 import com.seletivo.application.album.fetch.list.ListAlbumUseCase;
 import com.seletivo.application.album.update.DefaultUpdateAlbumUseCase;
 import com.seletivo.application.album.update.UpdateAlbumUseCase;
+import com.seletivo.domain.album.AlbumArtistaQueryGateway;
 import com.seletivo.domain.album.AlbumGateway;
 import com.seletivo.domain.artista.ArtistaGateway;
 import org.springframework.context.annotation.Bean;
@@ -20,10 +23,19 @@ public class AlbumUseCaseConfig {
 
     private final AlbumGateway albumGateway;
     private final ArtistaGateway artistaGateway;
+    private final AlbumArtistaQueryGateway albumArtistaQueryGateway;
 
-    public AlbumUseCaseConfig(final AlbumGateway albumGateway, final ArtistaGateway artistaGateway) {
+
+
+    public AlbumUseCaseConfig
+            (
+                    final AlbumGateway albumGateway,
+                    final ArtistaGateway artistaGateway,
+                    final AlbumArtistaQueryGateway albumArtistaQueryGateway
+            ) {
         this.albumGateway = albumGateway;
         this.artistaGateway = artistaGateway;
+        this.albumArtistaQueryGateway = albumArtistaQueryGateway;
     }
 
     @Bean
@@ -49,6 +61,11 @@ public class AlbumUseCaseConfig {
     @Bean
     public DeleteAlbumUseCase deleteAlbumUseCase(){
         return  new DefaultDeleteAlbumUseCase(albumGateway);
+    }
+
+    @Bean
+    public  ListAlbumArtistaUseCase listAlbumArtistaUseCase(){
+        return  new DefaultListAlbumArtistaUseCase(albumArtistaQueryGateway);
     }
 
 }

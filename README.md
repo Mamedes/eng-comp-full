@@ -69,6 +69,13 @@ $ cd infra
 $ mvn spring-boot:run
 ```
 
+### Executando os Testes
+
+```bash
+$ mvn clean test
+```
+
+
 ---
 
 ## API / Swagger
