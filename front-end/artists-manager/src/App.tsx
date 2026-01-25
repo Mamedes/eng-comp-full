@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { authFacade } from '@/core/auth/auth.facade';
 import { useObservable } from '@/shared/hooks/use-observable';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import LoginPage from './features/auth/pages/login-page';
@@ -11,6 +11,8 @@ import { initialAuthState } from './core/auth/auth.store';
 import { Loader2 } from 'lucide-react';
 import { AppLayout } from './features/layout/components/app-layout';
 import AlbumsPage from './features/albums/pages/album-page';
+import { initNotificationSocket, notification$ } from './core/services/notifacation.service';
+import { useEffect } from 'react';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isAppLoading } = useObservable(authFacade.state$, {
@@ -47,6 +49,25 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const auth = useObservable(authFacade.state$, initialAuthState);
+
+
+  useEffect(() => {
+    if (auth.isAuthenticated && auth.token) {
+
+      const disconnect = initNotificationSocket(auth.token);
+
+      const subscription = notification$.subscribe((message) => {
+        toast.success(message, {
+          theme: "dark"
+        });
+      });
+
+      return () => {
+        disconnect();
+        subscription.unsubscribe();
+      };
+    }
+  }, [auth.isAuthenticated, auth.token]);
 
   if (auth.isAppLoading) {
     return <FullScreenLoader />;

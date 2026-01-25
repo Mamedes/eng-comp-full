@@ -1,14 +1,41 @@
 import { Subject } from "rxjs";
+import { Client, IFrame } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
+import { API_ENDPOINTS } from "../constants/api.constants";
 
-export const notification$ = new Subject<any>();
+export const notification$ = new Subject<string>();
 
-export const initNotificationSocket = (token: string) => {
-  const ws = new WebSocket(`ws://localhost:8081/ws?token=${token}`);
+let stompClient: Client | null = null;
 
-  ws.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    notification$.next(data);
+export const initNotificationSocket = (token: string): (() => void) => {
+  const socket = new SockJS(`${API_ENDPOINTS.SOCKET.ENDPOINT}?token=${token}`);
+
+  stompClient = new Client({
+    webSocketFactory: () => socket,
+    connectHeaders: {
+      Authorization: `Bearer ${token}`,
+    },
+    debug: (msg: string) => {
+      if (import.meta.env.DEV) console.log("[WS Debug]:", msg);
+    },
+    reconnectDelay: 5000,
+    heartbeatIncoming: 4000,
+    heartbeatOutgoing: 4000,
+  });
+
+  stompClient.onConnect = (frame: IFrame) => {
+    stompClient?.subscribe("/topic/albuns", (message) => {
+      if (message.body) {
+        notification$.next(message.body);
+      }
+    });
   };
 
-  return () => ws.close();
+  stompClient.activate();
+
+  return () => {
+    if (stompClient?.active) {
+      stompClient.deactivate();
+    }
+  };
 };

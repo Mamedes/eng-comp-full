@@ -22,7 +22,7 @@ export const API_ENDPOINTS = {
     UPLOAD_COVER: (albumId: number | string) => `${ALBUM_BASE}/${albumId}/capa`,
   },
   SOCKET: {
-    BASE_URL: "/ws",
+    ENDPOINT: `${API_BASE_URL}/ws-seletivo`,
   },
 } as const;
 
