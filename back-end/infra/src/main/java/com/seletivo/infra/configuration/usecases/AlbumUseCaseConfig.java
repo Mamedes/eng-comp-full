@@ -10,6 +10,7 @@ import com.seletivo.application.album.fetch.list.DefaultListAlbumArtistaUseCase;
 import com.seletivo.application.album.fetch.list.DefaultListAlbumUseCase;
 import com.seletivo.application.album.fetch.list.ListAlbumArtistaUseCase;
 import com.seletivo.application.album.fetch.list.ListAlbumUseCase;
+import com.seletivo.application.album.notification.AlbumNotificationService;
 import com.seletivo.application.album.update.DefaultUpdateAlbumUseCase;
 import com.seletivo.application.album.update.UpdateAlbumUseCase;
 import com.seletivo.domain.album.AlbumArtistaQueryGateway;
@@ -24,6 +25,7 @@ public class AlbumUseCaseConfig {
     private final AlbumGateway albumGateway;
     private final ArtistaGateway artistaGateway;
     private final AlbumArtistaQueryGateway albumArtistaQueryGateway;
+    private final AlbumNotificationService albumNotificationService;
 
 
 
@@ -31,16 +33,18 @@ public class AlbumUseCaseConfig {
             (
                     final AlbumGateway albumGateway,
                     final ArtistaGateway artistaGateway,
-                    final AlbumArtistaQueryGateway albumArtistaQueryGateway
+                    final AlbumArtistaQueryGateway albumArtistaQueryGateway,
+                    final AlbumNotificationService albumNotificationService
             ) {
         this.albumGateway = albumGateway;
         this.artistaGateway = artistaGateway;
         this.albumArtistaQueryGateway = albumArtistaQueryGateway;
+        this.albumNotificationService = albumNotificationService;
     }
 
     @Bean
     public CreateAlbumUseCase createAlbumUseCase() {
-        return new DefaultCreateAlbumUseCase(albumGateway, artistaGateway);
+        return new DefaultCreateAlbumUseCase(albumGateway, artistaGateway,albumNotificationService);
     }
 
     @Bean

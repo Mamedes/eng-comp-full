@@ -2,6 +2,8 @@ package com.seletivo.infra.configuration.usecases;
 
 import com.seletivo.application.album.albumImage.create.CreateAlbumImagemUseCase;
 import com.seletivo.application.album.albumImage.create.DefaultCreateAlbumImagemUseCase;
+import com.seletivo.application.album.albumImage.delete.DefaultDeleteAlbumImagemUseCase;
+import com.seletivo.application.album.albumImage.delete.DeleteAlbumImagemUseCase;
 import com.seletivo.application.album.albumImage.fetch.get.DefaultGetAlbumImagemByIdUseCase;
 import com.seletivo.application.album.albumImage.fetch.get.GetAlbumImagemByIdUseCase;
 import com.seletivo.application.album.albumImage.fetch.list.DefaultListAlbumImagensByAlbumUseCase;
@@ -46,4 +48,10 @@ public class AlbumImagemUseCaseConfig {
     public ListAlbumImagensByAlbumUseCase listAlbumImagensByAlbumUseCase(){
         return new DefaultListAlbumImagensByAlbumUseCase(albumImagemGateway,albumGateway);
     }
+
+    @Bean
+    public DeleteAlbumImagemUseCase defaultDeleteAlbumImagemUseCase(){
+        return  new  DefaultDeleteAlbumImagemUseCase(albumImagemGateway, arquivoStorageGateway);
+    }
+
 }
