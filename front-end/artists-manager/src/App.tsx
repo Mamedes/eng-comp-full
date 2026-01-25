@@ -1,18 +1,25 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { useAuth } from './context/auth-context'
-import HomePage from './app/home'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { authFacade } from '@/core/auth/auth.facade';
+import { useObservable } from '@/shared/hooks/use-observable';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import LoginPage from './app/login/LoginPage'
-import { Loader2 } from 'lucide-react'
-import AlbumsPage from './app/album/page'
-import { AppLayout } from './app/components/AppLayout'
+import LoginPage from './features/auth/pages/login-page';
+import { FullScreenLoader } from './shared/components/full-screan-loader';
+import ArtistPage from './features/artistas/page/artista-page';
+import { initialAuthState } from './core/auth/auth.store';
+import { Loader2 } from 'lucide-react';
+import { AppLayout } from './features/layout/components/app-layout';
 
-function PrivateRoute({ children }: { children: JSX.Element }) {
-  const { isAuthenticated, isLoading } = useAuth();
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isAppLoading } = useObservable(authFacade.state$, {
+    token: null,
+    isAuthenticated: false,
+    isAuthLoading: false,
+    isAppLoading: true,
+  });
 
-  if (isLoading) {
+  if (isAppLoading) {
     return (
       <div className="h-screen w-screen bg-zinc-950 flex items-center justify-center">
         <Loader2 className="animate-spin text-white h-8 w-8" />
@@ -24,20 +31,54 @@ function PrivateRoute({ children }: { children: JSX.Element }) {
     return <Navigate to="/login" replace />;
   }
 
-  return children;
+  return <>{children}</>;
 }
+
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const auth = useObservable(authFacade.state$, initialAuthState);
+
+  if (auth.isAuthenticated) {
+    return <Navigate to="/app" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 export default function App() {
+  const auth = useObservable(authFacade.state$, initialAuthState);
+
+  if (auth.isAppLoading) {
+    return <FullScreenLoader />;
+  }
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<Navigate to="/app" replace />} />
 
-        <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/albums" element={<AlbumsPage />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <LoginPage />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          element={
+            <PrivateRoute>
+              <AppLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route path="app" element={<ArtistPage />} />
         </Route>
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={3000} />
+
+      <ToastContainer theme="dark" position="top-right" />
     </BrowserRouter>
-  )
+  );
 }
