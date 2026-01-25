@@ -10,6 +10,7 @@ import ArtistPage from './features/artistas/page/artista-page';
 import { initialAuthState } from './core/auth/auth.store';
 import { Loader2 } from 'lucide-react';
 import { AppLayout } from './features/layout/components/app-layout';
+import AlbumsPage from './features/albums/pages/album-page';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isAppLoading } = useObservable(authFacade.state$, {
@@ -73,6 +74,7 @@ export default function App() {
           }
         >
           <Route path="app" element={<ArtistPage />} />
+          <Route path="albums" element={<AlbumsPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

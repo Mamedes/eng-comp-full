@@ -1,11 +1,8 @@
 export interface PaginatedResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
-  last: boolean;
-  first: boolean;
+  items: T[];
+  total: number;
+  perPage: number;
+  currentPage: number;
 }
 
 export interface AuthResponse {
