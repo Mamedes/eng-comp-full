@@ -16,10 +16,15 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["src/*"],
+      "@/core/*": ["src/core/*"],
+      "@/features/*": ["src/features/*"],
+      "@/shared/*": ["src/shared/*"]
     }
   },
-  "include": ["src"],
+  "types": ["node"],
+  "include": ["src", "old/lib", "old/context"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
