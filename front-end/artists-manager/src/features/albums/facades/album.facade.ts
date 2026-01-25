@@ -1,10 +1,10 @@
-import { BehaviorSubject } from "rxjs";
 import { toast } from "react-toastify";
+import { BehaviorSubject } from "rxjs";
 import { AlbumService } from "../service/album.service";
-import { AlbumDashboardItem } from "../types";
+import { Album, CreateAlbumImagemDTO } from "../types";
 
 interface AlbumState {
-  data: AlbumDashboardItem[];
+  data: Album[];
   total: number;
   isLoading: boolean;
   search: string;
@@ -52,12 +52,46 @@ export const albumFacade = {
   setPage(page: number) {
     albumState$.next({ ...albumState$.value, page });
   },
+  async deleteAlbum(id: string): Promise<boolean> {
+    try {
+      await AlbumService.delete(id);
+      toast.success("Album removido!");
+      this.loadAlbums();
+      return true;
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao excluir album");
+      return false;
+    }
+  },
   async getAlbumImages(albumId: string) {
     try {
       return await AlbumService.getImages(albumId);
     } catch (error) {
-      toast.error("Erro ao carregar imagens do álbum");
+      console.error(error);
       return [];
+    }
+  },
+  async uploadImagens(data: CreateAlbumImagemDTO): Promise<boolean> {
+    try {
+      await AlbumService.uploadImages(data.albumId, Array.from(data.files));
+      toast.success(`Imagens enviadas com sucesso!`);
+      this.loadAlbums();
+      return true;
+    } catch (error) {
+      toast.error("Erro ao enviar imagens");
+      return false;
+    }
+  },
+  async deleteAlbumImage(imageId: string): Promise<boolean> {
+    try {
+      await AlbumService.deleteImage(imageId);
+      toast.success("Imagem removida.");
+      return true;
+    } catch (error) {
+      console.error(error);
+      toast.error("Erro ao remover imagem.");
+      return false;
     }
   },
 };

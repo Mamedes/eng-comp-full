@@ -3,20 +3,37 @@ import { X, Loader2, Check, Search } from 'lucide-react';
 import { Artista } from '@/features/artistas/types';
 import { ArtistaService } from '@/features/artistas/services/artista.service';
 import { AlbumService } from '../service/album.service';
+import { toast } from 'react-toastify';
+import { Album } from '../types';
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
     onSuccess: () => void;
+    initialData?: Album | null;
 }
 
-export function CreateAlbumModal({ isOpen, onClose, onSuccess }: Props) {
+export function AlbumFormModal({ isOpen, onClose, onSuccess, initialData }: Props) {
     const [titulo, setTitulo] = useState('');
     const [selectedArtistas, setSelectedArtistas] = useState<string[]>([]);
     const [artistasDisponiveis, setArtistasDisponiveis] = useState<Artista[]>([]);
-    const [searchTerm, setSearchTerm] = useState(''); // Estado para pesquisa de artistas
+    const [searchTerm, setSearchTerm] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isLoadingArtistas, setIsLoadingArtistas] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            loadArtistas();
+
+            if (initialData) {
+                setTitulo(initialData.albumTitulo);
+                setSelectedArtistas(initialData.artistaIds || []);
+            } else {
+                setTitulo('');
+                setSelectedArtistas([]);
+            }
+        }
+    }, [isOpen, initialData])
 
     useEffect(() => {
         if (isOpen) {
@@ -47,26 +64,37 @@ export function CreateAlbumModal({ isOpen, onClose, onSuccess }: Props) {
             prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id]
         );
     };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!titulo || selectedArtistas.length === 0) return;
+        if (!titulo || selectedArtistas.length === 0) {
+            toast.warn("Preencha o título e selecione ao menos um artista.");
+            return;
+        }
 
         setIsSubmitting(true);
         try {
-            await AlbumService.create({
-                titulo,
-                artistas_ids: selectedArtistas
-            });
+            const payload = {
+                albumTitulo: titulo,
+                artistaIds: selectedArtistas
+            };
+
+            if (initialData) {
+                await AlbumService.update(initialData.albumId, payload);
+                toast.success("Álbum atualizado com sucesso!");
+            } else {
+                await AlbumService.create(payload);
+                toast.success("Álbum cadastrado com sucesso!");
+            }
+
             onSuccess();
             handleClose();
-        } catch (error) {
-            console.error("Erro ao criar álbum", error);
+        } catch (error: any) {
+            const backendMessage = error.response?.data?.message;
+            toast.error(backendMessage || "Erro ao processar requisição.");
         } finally {
             setIsSubmitting(false);
         }
     };
-
     const handleClose = () => {
         setTitulo('');
         setSelectedArtistas([]);
@@ -75,13 +103,13 @@ export function CreateAlbumModal({ isOpen, onClose, onSuccess }: Props) {
     };
 
     if (!isOpen) return null;
-
+    const modalTitle = initialData ? "Editar Álbum" : "Novo Álbum";
     return (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-sm">
             <div className="bg-zinc-900 border-t sm:border border-white/10 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl max-h-[90vh] flex flex-col">
 
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl sm:text-2xl font-bold text-white">Novo Álbum</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold text-white">{modalTitle}</h2>
                     <button onClick={handleClose} className="p-2 text-zinc-500 hover:text-white transition-colors">
                         <X size={24} />
                     </button>

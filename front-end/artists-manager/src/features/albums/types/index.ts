@@ -1,7 +1,7 @@
 export interface Album {
-  secure_id: string;
-  titulo: string;
-  artistas_ids: string[];
+  albumId: string;
+  albumTitulo: string;
+  artistaIds: string[];
 }
 
 export interface AlbumDashboardItem {
@@ -12,15 +12,15 @@ export interface AlbumDashboardItem {
 }
 
 export interface AlbumImage {
-  secureId: string;
+  albumImagemId: string;
   fileName: string;
   linkTemporario: string;
   createdAt: string;
 }
 
 export interface CreateAlbumDTO {
-  titulo: string;
-  artistas_ids: string[];
+  albumTitulo: string;
+  artistaIds: string[];
 }
 
 export interface AlbumFilters {
@@ -29,4 +29,9 @@ export interface AlbumFilters {
   sort: string;
   dir: "asc" | "desc";
   search?: string;
+}
+
+export interface CreateAlbumImagemDTO {
+  albumId: string;
+  files: File[];
 }
