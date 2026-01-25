@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 public record CreateAlbumImagemRequest(
-        @JsonProperty("album_id") UUID album_id,
+        @JsonProperty("albumId") UUID albumId,
         @JsonProperty("files") List<MultipartFile> files
 ) {
     public UUID albumId() {
-        return album_id;
+        return albumId;
     }
 }

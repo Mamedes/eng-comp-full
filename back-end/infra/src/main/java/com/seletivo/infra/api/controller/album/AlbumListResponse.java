@@ -6,8 +6,8 @@ import java.util.Set;
 import java.util.UUID;
 
 public record AlbumListResponse(
-        @JsonProperty("secure_id") UUID secureId,
-        @JsonProperty("titulo") String titulo,
-        @JsonProperty("artistas_ids") Set<UUID> artistasIds
+        @JsonProperty("albumId") UUID secureId,
+        @JsonProperty("albumTitulo") String titulo,
+        @JsonProperty("artistaIds") Set<UUID> artistasIds
 ) {
 }

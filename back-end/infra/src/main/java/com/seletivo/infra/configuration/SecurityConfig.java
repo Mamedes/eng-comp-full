@@ -1,5 +1,6 @@
 package com.seletivo.infra.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -28,6 +29,9 @@ public class SecurityConfig {
     private  final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final RateLimitingFilter rateLimitingFilter;
 
+    @Value("${app.security.allowed-origin}")
+    private String allowedOrigin;
+
 
 
     public SecurityConfig(
@@ -52,7 +56,7 @@ public class SecurityConfig {
 
 
         authenticationManagerBuilder
-                .userDetailsService(userDetailsService)  // Defina o seu UserDetailsService
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
 
         return authenticationManagerBuilder.build();
@@ -72,6 +76,7 @@ public class SecurityConfig {
                             .requestMatchers("/content/**").permitAll()
                             .requestMatchers("/swagger-resources/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/v3/**").permitAll()
+                            .requestMatchers("/ws-seletivo/**").permitAll()
                             .anyRequest().authenticated();
                 })
                 .formLogin(f -> f.disable())
@@ -86,10 +91,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigin));
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

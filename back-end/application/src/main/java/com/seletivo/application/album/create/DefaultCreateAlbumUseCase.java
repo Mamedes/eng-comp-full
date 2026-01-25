@@ -1,6 +1,7 @@
 package com.seletivo.application.album.create;
 
 
+import com.seletivo.application.album.notification.AlbumNotificationService;
 import com.seletivo.domain.album.Album;
 import com.seletivo.domain.album.AlbumGateway;
 import com.seletivo.domain.artista.ArtistaGateway;
@@ -18,10 +19,12 @@ public class DefaultCreateAlbumUseCase extends CreateAlbumUseCase {
 
     private final AlbumGateway albumGateway;
     private final ArtistaGateway artistaGateway;
+    private final AlbumNotificationService notificationService;
 
-    public DefaultCreateAlbumUseCase(final AlbumGateway albumGateway, final ArtistaGateway artistaGateway) {
+    public DefaultCreateAlbumUseCase(final AlbumGateway albumGateway, final ArtistaGateway artistaGateway, AlbumNotificationService notificationService) {
         this.albumGateway = Objects.requireNonNull(albumGateway);
         this.artistaGateway = Objects.requireNonNull(artistaGateway);
+        this.notificationService = Objects.requireNonNull(notificationService);
     }
 
     @Override
@@ -44,6 +47,7 @@ public class DefaultCreateAlbumUseCase extends CreateAlbumUseCase {
     private Either<Notification, CreateAlbumOutput> create(final Album anAlbum) {
         return Try(() -> this.albumGateway.create(anAlbum))
                 .toEither()
-                .bimap(Notification::create,CreateAlbumOutput::from);
+                .bimap(Notification::create,CreateAlbumOutput::from)
+                .peek(output -> notificationService.notifyAlbumCreated("Novo álbum: " + anAlbum.getTitulo()));
     }
 }

@@ -2,10 +2,12 @@ package com.seletivo.application.album.albumImage.create;
 
 import com.seletivo.application.arquivo.ArquivoDTO;
 import com.seletivo.application.utils.FileUtils;
+import com.seletivo.domain.album.Album;
 import com.seletivo.domain.album.AlbumGateway;
 import com.seletivo.domain.album.AlbumImagem;
 import com.seletivo.domain.album.AlbumImagemGateway;
 import com.seletivo.domain.arquivo.ArquivoStorageGateway;
+import com.seletivo.domain.exceptions.NotFoundException;
 import com.seletivo.domain.validation.Error;
 import com.seletivo.domain.validation.handler.Notification;
 import io.vavr.control.Either;
@@ -14,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 import static io.vavr.API.Left;
 import static io.vavr.API.Right;
@@ -48,7 +52,7 @@ public class DefaultCreateAlbumImagemUseCase extends CreateAlbumImagemUseCase {
         final List<CreateAlbumImagemOutput> outputs = new ArrayList<>();
         final List<String> arquivosEnviados = new ArrayList<>();
 
-        final var oAlbum = this.albumGateway.findBySecureId(aCommand.albumId());
+        final var oAlbum = this.albumGateway.findBySecureId(aCommand.albumId()).orElseThrow(notFound(aCommand.albumId()));
 
         try {
             for (ArquivoDTO arquivoDTO : arquivos) {
@@ -56,7 +60,7 @@ public class DefaultCreateAlbumImagemUseCase extends CreateAlbumImagemUseCase {
                 final String bucketPath = "album-" + albumId + "/" + randomHash + "." + FileUtils.getFileExtension(arquivoDTO.nomeArquivo());
 
                 final var anAlbumImagem = AlbumImagem.newAlbumImagem(
-                        oAlbum.get().getId().getValue(),
+                        oAlbum.getId().getValue(),
                         arquivoDTO.nomeArquivo(),
                         bucketPath,
                         arquivoDTO.tipoConteudo()
@@ -91,5 +95,8 @@ public class DefaultCreateAlbumImagemUseCase extends CreateAlbumImagemUseCase {
         }
 
         return Right(outputs);
+    }
+    private Supplier<NotFoundException> notFound(final UUID aSecureId) {
+        return () -> NotFoundException.with(Album.class, aSecureId);
     }
 }
