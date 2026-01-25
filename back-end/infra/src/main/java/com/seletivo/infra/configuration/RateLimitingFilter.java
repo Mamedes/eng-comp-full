@@ -53,6 +53,15 @@ public class RateLimitingFilter extends OncePerRequestFilter {
             sendErrorResponse(response);
         }
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+
+        return path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/webjars")
+                || path.startsWith("/swagger-resources");
+    }
 
     private String resolveClientKey(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

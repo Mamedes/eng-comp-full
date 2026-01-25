@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record AlbumImagemResponse(
        // @JsonProperty("id") Long id,
-        @JsonProperty("secureId") UUID secureId,
+        @JsonProperty("albumImagemId") UUID secureId,
      // @JsonProperty("albumId") Long albumId,
         @JsonProperty("fileName") String fileName,
         @JsonProperty("bucket") String bucket,

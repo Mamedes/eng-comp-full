@@ -37,7 +37,7 @@ public interface AlbumImagemAPI {
             @ApiResponse(responseCode = "422", description = "A validation error was thrown"),
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
-    List<AlbumImagemResponse> listByAlbum(@PathVariable(name = "id") UUID album_id);
+    List<AlbumImagemResponse> listByAlbum(@PathVariable(name = "id") UUID albumId);
 
     @GetMapping(
             value = "{id}",

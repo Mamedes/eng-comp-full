@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public record UpdateAlbumRequest(
-        @JsonProperty("titulo") String titulo,
-        @JsonProperty("artistas_ids") Set<UUID> artistasIds
+        @JsonProperty("albumTitulo") String titulo,
+        @JsonProperty("artistaIds") Set<UUID> artistasIds
 ) {
 }

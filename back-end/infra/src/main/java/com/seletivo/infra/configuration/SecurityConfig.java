@@ -52,7 +52,7 @@ public class SecurityConfig {
 
 
         authenticationManagerBuilder
-                .userDetailsService(userDetailsService)  // Defina o seu UserDetailsService
+                .userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder());
 
         return authenticationManagerBuilder.build();
