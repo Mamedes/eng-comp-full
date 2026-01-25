@@ -73,5 +73,5 @@ public interface AlbumImagemAPI {
             @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
     })
     @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
-    void deleteById(@PathVariable(name = "id") Long id);
+    void deleteById(@PathVariable(name = "id") UUID id);
 }

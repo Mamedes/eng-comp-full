@@ -3,6 +3,7 @@ package com.seletivo.infra.api.controller.albumImage;
 import com.seletivo.application.album.albumImage.create.CreateAlbumImagemCommand;
 import com.seletivo.application.album.albumImage.create.CreateAlbumImagemOutput;
 import com.seletivo.application.album.albumImage.create.CreateAlbumImagemUseCase;
+import com.seletivo.application.album.albumImage.delete.DeleteAlbumImagemUseCase;
 import com.seletivo.application.album.albumImage.fetch.get.GetAlbumImagemByIdUseCase;
 import com.seletivo.application.album.albumImage.fetch.list.ListAlbumImagensByAlbumUseCase;
 import com.seletivo.application.arquivo.ArquivoDTO;
@@ -27,20 +28,23 @@ import java.util.stream.Collectors;
 @RestController
 public class AlbumImagemController implements AlbumImagemAPI {
     private final CreateAlbumImagemUseCase createAlbumImagemUseCase;
-   private final ListAlbumImagensByAlbumUseCase  listAlbumImagensByAlbumUseCase;
+    private final ListAlbumImagensByAlbumUseCase listAlbumImagensByAlbumUseCase;
     private final GetAlbumImagemByIdUseCase getAlbumImagemByIdUseCase;
-   private final AlbumImagemApiPresenter albumImagemApiPresenter;
+    private final AlbumImagemApiPresenter albumImagemApiPresenter;
+    private final DeleteAlbumImagemUseCase deleteAlbumImagemUseCase;
 
     public AlbumImagemController(
             final CreateAlbumImagemUseCase createAlbumImagemUseCase,
             final ListAlbumImagensByAlbumUseCase listAlbumImagensByAlbumUseCase,
             final GetAlbumImagemByIdUseCase getAlbumImagemByIdUseCase,
-            final AlbumImagemApiPresenter albumImagemApiPresenter
+            final AlbumImagemApiPresenter albumImagemApiPresenter,
+            final DeleteAlbumImagemUseCase deleteAlbumImagemUseCase
     ) {
         this.createAlbumImagemUseCase = Objects.requireNonNull(createAlbumImagemUseCase);
         this.listAlbumImagensByAlbumUseCase = Objects.requireNonNull(listAlbumImagensByAlbumUseCase);
         this.getAlbumImagemByIdUseCase = Objects.requireNonNull(getAlbumImagemByIdUseCase);
         this.albumImagemApiPresenter = Objects.requireNonNull(albumImagemApiPresenter);
+        this.deleteAlbumImagemUseCase = Objects.requireNonNull(deleteAlbumImagemUseCase);
     }
 
     @Override
@@ -67,6 +71,7 @@ public class AlbumImagemController implements AlbumImagemAPI {
 
         return this.createAlbumImagemUseCase.execute(aCommand).fold(onError, onSuccess);
     }
+
     @Override
     public List<AlbumImagemResponse> listByAlbum(final UUID secureId) {
         return this.listAlbumImagensByAlbumUseCase.execute(secureId)
@@ -86,6 +91,7 @@ public class AlbumImagemController implements AlbumImagemAPI {
     }
 
     @Override
-    public void deleteById(final Long id) {
+    public void deleteById(final UUID id) {
+        this.deleteAlbumImagemUseCase.execute(id);
     }
 }
