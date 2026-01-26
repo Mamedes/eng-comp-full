@@ -1,0 +1,77 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: engcomp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio_server
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: sF021A-?=sZz
+    ports:
+    - "9000:9000"
+    - "9001:9001"
+    volumes:
+    - minio_data:/data
+    - ./back-end/minio/minio-init.sh:/docker-entrypoint-init.d/minio-init.sh
+    networks:
+    - mynetwork
+
+  backend:
+    build:
+      context: ./back-end
+      dockerfile: infra/Dockerfile
+    container_name: seletivo_backend
+    restart: always
+    depends_on:
+      - postgres
+      - minio
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/engcomp
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      MINIO_URL: http://minio:9000
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: sF021A-?=sZz
+    ports:
+      - "8081:8081"
+    networks:
+      - mynetwork
+
+  frontend:
+    build:
+      context: ./front-end/artists-manager
+      dockerfile: Dockerfile
+    container_name: seletivo_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    networks:
+      - mynetwork
+
+volumes:
+  postgres_data:
+  minio_data:
+
+networks:
+  mynetwork:
+    driver: bridge
