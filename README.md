@@ -11,7 +11,7 @@ API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, á
 * [📊 Diagrama de Entidades (Resumo)](#-diagrama-de-entidades-resumo)
 * [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 * [Estrutura do Projeto](#-estrutura-do-projeto)
-
+* [Sincronização de Regionais](#-sicronizacao-regionais)
 ---
 
 ## 🔎 Visão Geral
@@ -142,6 +142,40 @@ seletivo
 ```
 
 ---
+
+## 🧱 Sicronização Regionais
+
+```text
+1️⃣ Novo no endpoint→ Inserir novo registro com ativo = true
+
+2️⃣ Não disponível no endpoint→ Inativar (ativo = false) o registro local ativo
+
+3️⃣ Qualquer atributo alterado (ex: nome)→ Inativar o registro atual e criar um novo com a nova denominação
+
+Mapeamento das regionais locais ativas por external_id
+
+Iteração única sobre a lista recebida da API externa
+
+Segunda iteração para identificar registros locais ausentes no endpoint
+
+🌐 API Interna
+
+Endpoint de Sincronização Manual
+
+POST /v1/regionais/sync
+📥 Payload:
+{
+  "regionais": [
+    { "id": 9, "nome": "REGIONAL DE CUIABÁ" }
+  ]
+}
+   Resposta de sucesso
+{
+  "success": true,
+  "processados": 5
+}
+
+```
 
 ## 📌 Observações
 
