@@ -5,8 +5,10 @@ API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, á
 ## 📑 Sumário
 
 * [Visão Geral](#-visão-geral)
-* [Download](#download)
-* [Execução](#execução)
+* [Arquitetura](#Arquitetura)
+* [Pré-requisitos](#-pré-requisitos)
+* [Execução com Docker (Recomendado)](#-execução-com-docker-recomendado)
+* [Execução Local (Sem Docker)](#-execução-local-sem-docker)
 * [API / Swagger](#api--swagger)
 * [📊 Diagrama de Entidades (Resumo)](#-diagrama-de-entidades-resumo)
 * [Tecnologias Utilizadas](#-tecnologias-utilizadas)
@@ -26,70 +28,98 @@ O projeto tem como objetivo disponibilizar uma API REST para:
 
 ---
 
-## Download
+##  Arquitetura
 
-1. Clone o repositório:
+O backend segue uma separação em camadas inspirada em **Clean Architecture**:
 
-```bash
-$ git clone https://github.com/Mamedes/eng-comp-full.git
-```
+* **domain** → Entidades e regras de negócio
+* **application** → Casos de uso e serviços
+* **infra** → Controllers, repositórios, integrações externas e configurações
 
-2. Acesse o diretório do projeto:
+O projeto utiliza **Maven multi-módulo**, com build centralizado no POM pai.
 
-```bash
-$ cd seplag
-```
+##  Pré-requisitos
 
----
+### Para execução com Docker (recomendado)
 
-## Execução
+* Docker Desktop
+* Docker Compose (v2+)
 
-### Pré-requisitos
+### Para execução local (sem Docker)
 
 * Java **21**
 * Maven **3.9+**
-* Docker e Docker Compose (opcional, recomendado para MinIO e banco)
+* PostgreSQL
+* MinIO (ou outro S3 compatível)
+
+---
+
+##  Execução com Docker (Recomendado)
+
+###  Clonar o repositório
+
+```bash
+git clone https://github.com/Mamedes/eng-comp-full.git
+cd eng-comp-full
+```
+
+###   Subir toda a stack
+
+```bash
+docker compose build
+docker compose up -d
+```
+---
+##  Execução Local (Sem Docker)
 
 ### Build do projeto
 
+Na raiz do backend:
+
 ```bash
-$ mvn clean install
+mvn clean package install
 ```
 
 ### Executar a aplicação
 
 ```bash
-$ mvn spring-boot:run
+cd infra
+mvn spring-boot:run
 ```
 
-Ou execute diretamente pelo módulo **infra**:
+### Executar testes
 
 ```bash
-$ cd infra
-$ mvn spring-boot:run
+mvn clean test
 ```
-
-### Executando os Testes
-
-```bash
-$ mvn clean test
-```
-
 
 ---
 
+### Serviços disponíveis
+
+| Serviço   | URL |
+|----------|-----|
+| Frontend | http://localhost:3000 |
+| Backend  | http://localhost:8081 |
+| Swagger  | http://localhost:8081/swagger-ui/index.html |
+| MinIO    | http://localhost:9001 |
+| PostgreSQL | localhost:5432 |
+
+> 💡 O frontend se comunica com o backend internamente via Docker network.
+
+---
 ## API / Swagger
 
 Após subir a aplicação, a documentação interativa da API estará disponível em:
 
 ```
-http://localhost:8080/swagger-ui.html
+http://localhost:8081/swagger-ui.html
 ```
 
 ou
 
 ```
-http://localhost:8080/swagger-ui/index.html
+http://localhost:8081/swagger-ui/index.html
 ```
 
 ---
@@ -128,17 +158,25 @@ Estrutura destinada à importação e sincronização de dados provenientes de f
 * Swagger / OpenAPI
 * MinIO (S3)
 * Docker / Docker Compose
+* React + Vite (Frontend)
 
 ---
 
 ## 🧱 Estrutura do Projeto
 
 ```text
-seletivo
-├── domain        # Entidades e regras de negócio
-├── application   # Casos de uso e serviços
-├── infra         # Controllers, repositórios, configurações
-└── pom.xml       # POM pai (multi-módulo)
+eng-comp-full
+├── back-end
+│   ├── domain        # Entidades e regras de negócio
+│   ├── application   # Casos de uso e serviços
+│   ├── infra         # Controllers, repositórios, configs, API
+│   └── pom.xml       # POM pai (multi-módulo)
+│
+├── front-end
+│   └── artists-manager   # React + Vite + Nginx
+│
+├── docker-compose.yml
+└── README.md
 ```
 
 ---
@@ -146,11 +184,11 @@ seletivo
 ## 🧱 Sicronização Regionais
 
 ```text
-1️⃣ Novo no endpoint→ Inserir novo registro com ativo = true
+Novo no endpoint→ Inserir novo registro com ativo = true
 
-2️⃣ Não disponível no endpoint→ Inativar (ativo = false) o registro local ativo
+Não disponível no endpoint→ Inativar (ativo = false) o registro local ativo
 
-3️⃣ Qualquer atributo alterado (ex: nome)→ Inativar o registro atual e criar um novo com a nova denominação
+Qualquer atributo alterado (ex: nome)→ Inativar o registro atual e criar um novo com a nova denominação
 
 Mapeamento das regionais locais ativas por external_id
 
@@ -184,5 +222,3 @@ POST /v1/regionais/sync
 * Ideal para extensão com autenticação, cache e mensageria
 
 ---
-
-📬 Em caso de dúvidas ou sugestões, fique à vontade para contribuir ou abrir uma issue.
