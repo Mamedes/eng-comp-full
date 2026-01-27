@@ -24,6 +24,9 @@ export const API_ENDPOINTS = {
   SOCKET: {
     ENDPOINT: `${API_BASE_URL}/ws-seletivo`,
   },
+  HEALTH: {
+    STATUS: "/actuator/health",
+  },
 } as const;
 
 export type ApiEndpoints = typeof API_ENDPOINTS;
