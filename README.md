@@ -13,6 +13,7 @@ API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, á
 * [📊 Diagrama de Entidades (Resumo)](#-diagrama-de-entidades-resumo)
 * [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 * [Estrutura do Projeto](#-estrutura-do-projeto)
+* [Monitoramento e Health Checks](#-monitoramento-e-health-checks)
 * [Sincronização de Regionais](#-sicronizacao-regionais)
 ---
 
@@ -159,6 +160,20 @@ Estrutura destinada à importação e sincronização de dados provenientes de f
 * MinIO (S3)
 * Docker / Docker Compose
 * React + Vite (Frontend)
+
+---
+
+## Monitoramento e Health Checks
+
+```text
+Dashboard de Status (Frontend)
+O frontend conta com uma página dedicada (/status) que consome os dados do Actuator via RxJS, permitindo que administradores visualizem a integridade de:
+
+Conexão com Banco de Dados
+
+Conectividade com MinIO (S3)
+
+Espaço em disco e status da JVM
 
 ---
 
