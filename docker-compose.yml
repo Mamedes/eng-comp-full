@@ -25,18 +25,18 @@ services:
       MINIO_ROOT_USER: admin
       MINIO_ROOT_PASSWORD: sF021A-?=sZz
     ports:
-    - "9000:9000"
-    - "9001:9001"
+      - "9000:9000"
+      - "9001:9001"
     volumes:
-    - minio_data:/data
-    - ./back-end/minio/minio-init.sh:/docker-entrypoint-init.d/minio-init.sh
+      - minio_data:/data
+      - ./back-end/minio/minio-init.sh:/docker-entrypoint-init.d/minio-init.sh
     networks:
-    - mynetwork
+      - mynetwork
 
   backend:
     build:
       context: ./back-end
-      dockerfile: infra/Dockerfile
+      dockerfile: Dockerfile
     container_name: seletivo_backend
     restart: always
     depends_on:
