@@ -77,6 +77,8 @@ public class SecurityConfig {
                             .requestMatchers("/swagger-resources/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/v3/**").permitAll()
                             .requestMatchers("/ws-seletivo/**").permitAll()
+                            .requestMatchers("/actuator/health/**").permitAll()
+                            .requestMatchers("/actuator/info").permitAll()
                             .anyRequest().authenticated();
                 })
                 .formLogin(f -> f.disable())
