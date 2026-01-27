@@ -60,7 +60,7 @@ O projeto utiliza **Maven multi-módulo**, com build centralizado no POM pai.
 
 ```bash
 git clone https://github.com/Mamedes/eng-comp-full.git
-cd eng-comp-full
+cd mamedeseronildesdecastrojunior048766
 ```
 
 ###   Subir toda a stack
