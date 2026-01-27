@@ -175,6 +175,7 @@ Conectividade com MinIO (S3)
 
 Espaço em disco e status da JVM
 
+```
 ---
 
 ## 🧱 Estrutura do Projeto
