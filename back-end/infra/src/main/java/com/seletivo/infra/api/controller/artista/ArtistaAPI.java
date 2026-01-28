@@ -4,6 +4,9 @@ import com.seletivo.application.album.fetch.projection.ArtistaListViewOutput;
 import com.seletivo.domain.pagination.Pagination;
 import com.seletivo.infra.api.controller.artista.request.CreateArtistaRequest;
 import com.seletivo.infra.api.controller.artista.request.UpdateArtistaRequest;
+import com.seletivo.infra.api.controller.artista.response.ArtistaDetalheResponse;
+import com.seletivo.infra.api.controller.artista.response.ArtistaListResponse;
+import com.seletivo.infra.api.controller.artista.response.ArtistaResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -92,6 +95,15 @@ public interface ArtistaAPI {
             @RequestParam(name = "sort", required = false, defaultValue = "nome") String sort,
             @RequestParam(name = "dir", required = false, defaultValue = "asc") String direction
     );
+
+    @GetMapping(value = "/{id}/detalhe", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get Artist details with Albums and Photos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Artista retrieved successfully"),
+            @ApiResponse(responseCode = "404", description = "Artista was not found"),
+            @ApiResponse(responseCode = "500", description = "An internal server error was thrown"),
+    })
+    ArtistaDetalheResponse getDetalheById(@PathVariable(name = "id") UUID id);
 
 
 }

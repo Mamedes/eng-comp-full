@@ -1,4 +1,4 @@
-package com.seletivo.infra.api.controller.artista;
+package com.seletivo.infra.api.controller.artista.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;

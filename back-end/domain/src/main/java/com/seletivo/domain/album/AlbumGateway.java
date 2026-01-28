@@ -2,6 +2,8 @@ package com.seletivo.domain.album;
 
 import com.seletivo.domain.pagination.Pagination;
 import com.seletivo.domain.pagination.SearchQuery;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,4 +20,6 @@ public interface AlbumGateway {
     Album update(Album anAlbum);
 
     Pagination<Album> findAll(SearchQuery aQuery);
+
+    List<Album> findAllByArtistaId(UUID artistaId);
 }

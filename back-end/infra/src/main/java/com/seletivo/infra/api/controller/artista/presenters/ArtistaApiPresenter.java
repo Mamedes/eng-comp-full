@@ -2,8 +2,8 @@ package com.seletivo.infra.api.controller.artista.presenters;
 
 import com.seletivo.application.artista.fetch.ArtistaOutput;
 import com.seletivo.application.artista.fetch.list.ArtistaListOutput;
-import com.seletivo.infra.api.controller.artista.ArtistaListResponse;
-import com.seletivo.infra.api.controller.artista.ArtistaResponse;
+import com.seletivo.infra.api.controller.artista.response.ArtistaListResponse;
+import com.seletivo.infra.api.controller.artista.response.ArtistaResponse;
 
 public interface ArtistaApiPresenter {
 

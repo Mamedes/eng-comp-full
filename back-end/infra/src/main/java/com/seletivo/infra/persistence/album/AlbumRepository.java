@@ -42,5 +42,13 @@ public interface AlbumRepository extends JpaRepository<AlbumJpaEntity, Long> {
             Pageable pageable
     );
 
+    @Query(value = """
+        SELECT al.* FROM album al
+        INNER JOIN album_artista aa ON al.id = aa.album_id
+        INNER JOIN artista art ON aa.artista_id = art.id
+        WHERE art.secure_id = :artistaId
+    """, nativeQuery = true)
+    List<AlbumJpaEntity> findAllByArtistaSecureId(@Param("artistaId") UUID artistaId);
+
 
 }
