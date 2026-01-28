@@ -15,6 +15,9 @@ public class MinioConfig {
     private String secretKey;
     @Value("${minio.bucket.name}")
     private String bucketName;
+    @Value("${minio.public-url}")
+    private String publicUrl;
+
     @Bean
     public MinioClient minioClient() {
         return MinioClient.builder()
@@ -25,5 +28,9 @@ public class MinioConfig {
 
     public String getBucketName() {
         return bucketName;
+    }
+
+    public String getPublicUrl() {
+        return publicUrl;
     }
 }
