@@ -1,9 +1,6 @@
 import {
   debounceTime,
   distinctUntilChanged,
-  switchMap,
-  tap,
-  filter,
 } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { artistaActions, artistaState$ } from "../state/artista.store";

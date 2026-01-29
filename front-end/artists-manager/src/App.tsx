@@ -14,6 +14,7 @@ import AlbumsPage from './features/albums/pages/album-page';
 import { initNotificationSocket, notification$ } from './core/services/notifacation.service';
 import { useEffect } from 'react';
 import StatusPage from './features/heath/page/status-page';
+import ArtistDetailPage from './features/artistas/page/artista-detalhe-page';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isAppLoading } = useObservable(authFacade.state$, {
@@ -98,6 +99,7 @@ export default function App() {
           <Route path="app" element={<ArtistPage />} />
           <Route path="albums" element={<AlbumsPage />} />
           <Route path="status" element={<StatusPage />} />
+          <Route path="app/:id" element={<ArtistDetailPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/login" replace />} />

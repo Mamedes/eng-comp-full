@@ -5,6 +5,7 @@ import { useObservable } from '@/shared/hooks/use-observable';
 import { ArtistaDashboard } from '../types';
 import { ArtistModal } from './componentes/artista-modal';
 import { ConfirmModal } from '@/features/layout/components/confirm-modal';
+import { useNavigate } from 'react-router-dom';
 
 const INITIAL_ARTISTA_STATE = {
     data: [],
@@ -14,6 +15,7 @@ const INITIAL_ARTISTA_STATE = {
 };
 
 export default function ArtistPage() {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedArtista, setSelectedArtista] = useState<ArtistaDashboard | null>(null);
     const [artistaToDelete, setArtistaToDelete] = useState<string | null>(null);
@@ -88,19 +90,21 @@ export default function ArtistPage() {
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {data.map((artista) => (
-                            <div key={artista.artistaId} className="group bg-zinc-900/40 border border-white/5 p-6 rounded-3xl hover:bg-zinc-900/80 hover:border-purple-500/30 transition-all hover:-translate-y-1 shadow-xl">
+                            <div key={artista.artistaId}
+                                onClick={() => navigate(`/app/${artista.artistaId}`)}
+                                className="cursor-pointer group bg-zinc-900/40 border border-white/5 p-6 rounded-3xl hover:bg-zinc-900/80 hover:border-purple-500/30 transition-all hover:-translate-y-1 shadow-xl">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="p-3 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-2xl text-purple-400 border border-white/5">
                                         <Users size={24} />
                                     </div>
                                     <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                         <button
-                                            onClick={() => handleEdit(artista)}
+                                            onClick={(e) => { e.stopPropagation(); handleEdit(artista); }}
                                             className="p-2 bg-zinc-800 hover:text-blue-400 rounded-lg border border-white/5 transition-colors">
                                             <Edit3 size={16} />
                                         </button>
                                         <button
-                                            onClick={() => handleDeleteClick(artista.artistaId)}
+                                            onClick={(e) => { e.stopPropagation(); handleDeleteClick(artista.artistaId) }}
                                             className="p-2 bg-zinc-800 hover:text-red-400 rounded-lg border border-white/5 transition-colors"
                                         >
                                             <Trash2 size={16} />

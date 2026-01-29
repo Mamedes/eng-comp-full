@@ -1,7 +1,7 @@
 import { httpClient } from "@/core/api/client";
 import { API_ENDPOINTS } from "@/core/constants/api.constants";
 import { PaginatedResponse } from "@/core/types/api.types";
-import { Artista, ArtistaFormData } from "../types";
+import { Artista, ArtistaDetalhe, ArtistaFormData } from "../types";
 
 export const ArtistaService = {
   listAll: async (params?: any) => {
@@ -46,4 +46,10 @@ export const ArtistaService = {
     );
     return response.data;
   },
+getDetails: async (id: string): Promise<ArtistaDetalhe> => {
+  const { data } = await httpClient.get<ArtistaDetalhe>(
+    `${API_ENDPOINTS.ARTISTAS.BY_ID(id)}/detalhe`
+  );
+  return data;
+},
 };
