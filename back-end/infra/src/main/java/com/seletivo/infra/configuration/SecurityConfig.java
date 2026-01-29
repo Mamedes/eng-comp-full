@@ -96,8 +96,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(allowedOrigin));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-        configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token","refresh-token"));
+        configuration.setExposedHeaders(Arrays.asList("x-auth-token","refresh-token"));
 
         configuration.setAllowCredentials(true);
 
