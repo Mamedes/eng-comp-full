@@ -6,6 +6,7 @@ API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, á
 
 * [Visão Geral](#-visão-geral)
 * [Arquitetura](#Arquitetura)
+* [Padrão de Identificadores e Auditoria](#-padrão-de-identificadores-e-auditoria)
 * [Pré-requisitos](#-pré-requisitos)
 * [Execução com Docker (Recomendado)](#-execução-com-docker-recomendado)
 * [Execução Local (Sem Docker)](#-execução-local-sem-docker)
@@ -15,9 +16,10 @@ API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, á
 * [Estrutura do Projeto](#-estrutura-do-projeto)
 * [Monitoramento e Health Checks](#-monitoramento-e-health-checks)
 * [Sincronização de Regionais](#-sicronizacao-regionais)
+
 ---
 
-## 🔎 Visão Geral
+##  Visão Geral
 
 O projeto tem como objetivo disponibilizar uma API REST para:
 
@@ -29,7 +31,7 @@ O projeto tem como objetivo disponibilizar uma API REST para:
 
 ---
 
-##  Arquitetura
+## Arquitetura
 
 O backend segue uma separação em camadas inspirada em **Clean Architecture**:
 
@@ -39,7 +41,45 @@ O backend segue uma separação em camadas inspirada em **Clean Architecture**:
 
 O projeto utiliza **Maven multi-módulo**, com build centralizado no POM pai.
 
-##  Pré-requisitos
+---
+
+##  Padrão de Identificadores e Auditoria
+
+A arquitetura do projeto adota um **padrão explícito de identificação e auditoria**, alinhado a boas práticas de segurança, rastreabilidade e desacoplamento entre camadas internas e externas.
+
+###  Identificação
+
+* Cada entidade possui:
+
+    * **`id`** → Identificador técnico (chave primária) utilizado **exclusivamente para operações internas**, relacionamentos e persistência.
+    * **`secureId (UUID)`** → Identificador público, **imutável**, exposto ao **frontend e APIs externas**.
+
+O **UUID é o único identificador trafegado nas requisições externas**, evitando exposição de IDs sequenciais e aumentando a segurança da API.
+
+---
+
+### ⏱️ Auditoria
+
+Todas as entidades persistentes seguem um padrão de auditoria temporal:
+
+```java
+@Column(name = "created_at", nullable = false, updatable = false)
+private Instant createdAt;
+
+@Column(name = "updated_at", nullable = false)
+private Instant updatedAt;
+```
+
+* **`createdAt`** → Data/hora de criação do registro (imutável)
+* **`updatedAt`** → Data/hora da última atualização
+
+Esse padrão garante:
+
+* Rastreabilidade completa dos dados
+
+---
+
+## Pré-requisitos
 
 ### Para execução com Docker (recomendado)
 
@@ -55,23 +95,24 @@ O projeto utiliza **Maven multi-módulo**, com build centralizado no POM pai.
 
 ---
 
-##  Execução com Docker (Recomendado)
+## Execução com Docker (Recomendado)
 
-###  Clonar o repositório
+### Clonar o repositório
 
 ```bash
 git clone https://github.com/Mamedes/mamedeseronildesdecastrojunior048766.git
 cd mamedeseronildesdecastrojunior048766
 ```
 
-###   Subir toda a stack
+### Subir toda a stack
 
 ```bash
 docker compose build
 docker compose up -d
 ```
 ---
-##  Execução Local (Sem Docker)
+
+## Execução Local (Sem Docker)
 
 ### Build do projeto
 
@@ -174,10 +215,11 @@ Conexão com Banco de Dados
 Conectividade com MinIO (S3)
 
 Espaço em disco e status da JVM
+```
 
 ---
 
-## 🧱 Estrutura do Projeto
+##  Estrutura do Projeto
 
 ```text
 eng-comp-full
@@ -196,7 +238,7 @@ eng-comp-full
 
 ---
 
-## 🧱 Sicronização Regionais
+##  Sicronização Regionais
 
 ```text
 Novo no endpoint→ Inserir novo registro com ativo = true
@@ -230,10 +272,11 @@ POST /v1/regionais/sync
 
 ```
 
+---
+
 ## 📌 Observações
 
 * O projeto segue uma separação em camadas inspirada em **Clean Architecture**
+* O padrão **ID interno + UUID público** evita exposição de chaves técnicas
 * As imagens dos álbuns não são armazenadas no banco, apenas seus metadados
-* Ideal para extensão com autenticação, cache e mensageria
-
----
+* Ideal para extensão com autenticação.
