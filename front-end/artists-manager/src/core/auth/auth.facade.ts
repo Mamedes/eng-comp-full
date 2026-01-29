@@ -17,6 +17,7 @@ export const authFacade = {
       );
 
       localStorage.setItem("auth_token", data.accessToken);
+      localStorage.setItem("refresh_token", data.refreshToken);
 
       authActions.update({
         token: data.accessToken,
