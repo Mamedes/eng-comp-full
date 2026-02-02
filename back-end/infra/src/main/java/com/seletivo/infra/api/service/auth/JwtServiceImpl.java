@@ -1,4 +1,4 @@
-package com.seletivo.infra.api.controller.login;
+package com.seletivo.infra.api.service.auth;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -7,6 +7,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -18,12 +19,23 @@ import java.util.Date;
 @Component
 public class JwtServiceImpl implements JwtService {
 
-    private final long jwtExpirationInMs = 3000000L;
-    private final long refreshTokenExpirationInMs = 86400000L;
-    private static final String SECRET_STRING = "G1LyKRPljCT7YTlIiYzIEVjC9P1t413A4Fu2ZiKy4gd";
+    @Value("${security.jwt.expiration-minutes}")
+    private Long jwtExpirationInMs;
 
-    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
-    private final SecretKey keyRefresh = Keys.hmacShaKeyFor(SECRET_STRING.getBytes(StandardCharsets.UTF_8));
+    @Value("${security.jwt.refresh-expiration-hours}")
+    private Long refreshTokenExpirationInMs;
+
+    @Value("${security.jwt.secret}")
+    private String secret;
+
+
+    private SecretKey key;
+    private SecretKey keyRefresh;
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.keyRefresh = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    }
 
     @PostConstruct
     public void post(){
@@ -36,7 +48,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .subject(userPrincipal.getUsername())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationInMs * 60 * 1000))
                 .signWith(key)
                 .compact();
     }
@@ -47,7 +59,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .subject(userPrincipal.getUsername())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationInMs))
+                .expiration( new Date(System.currentTimeMillis() + refreshTokenExpirationInMs * 60 * 60 * 1000))
                 .signWith(keyRefresh)
                 .compact();
     }
@@ -57,7 +69,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
+                .expiration(new Date(System.currentTimeMillis() + jwtExpirationInMs * 60 * 1000))
                 .signWith(key)
                 .compact();
     }
@@ -67,7 +79,7 @@ public class JwtServiceImpl implements JwtService {
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpirationInMs))
+                .expiration( new Date(System.currentTimeMillis() + refreshTokenExpirationInMs * 60 * 60 * 1000))
                 .signWith(keyRefresh)
                 .compact();
     }

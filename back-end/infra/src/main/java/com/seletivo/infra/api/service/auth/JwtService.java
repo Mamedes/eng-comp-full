@@ -1,4 +1,4 @@
-package com.seletivo.infra.api.controller.login;
+package com.seletivo.infra.api.service.auth;
 
 import org.springframework.security.core.Authentication;
 

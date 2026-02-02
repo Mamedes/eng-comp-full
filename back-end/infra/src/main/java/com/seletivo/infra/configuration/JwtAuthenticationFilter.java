@@ -1,6 +1,6 @@
 package com.seletivo.infra.configuration;
 
-import com.seletivo.infra.api.controller.login.JwtService;
+import com.seletivo.infra.api.service.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
