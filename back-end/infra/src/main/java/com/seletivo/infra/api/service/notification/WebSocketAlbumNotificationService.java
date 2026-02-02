@@ -1,4 +1,4 @@
-package com.seletivo.infra.api.controller.notification;
+package com.seletivo.infra.api.service.notification;
 
 import com.seletivo.application.album.notification.AlbumNotificationService;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
