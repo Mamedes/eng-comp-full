@@ -14,6 +14,7 @@ API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, á
 * [📊 Diagrama de Entidades (Resumo)](#-diagrama-de-entidades-resumo)
 * [Tecnologias Utilizadas](#-tecnologias-utilizadas)
 * [Estrutura do Projeto](#-estrutura-do-projeto)
+* [Segurança e Autenticação](#-segurança-e-autenticação)
 * [Monitoramento e Health Checks](#-monitoramento-e-health-checks)
 * [Sincronização de Regionais](#-sicronizacao-regionais)
 
@@ -234,6 +235,30 @@ eng-comp-full
 │
 ├── docker-compose.yml
 └── README.md
+```
+
+---
+## Segurança e Autenticação
+
+```text
+* accessToken: duração (5 minutos).
+* refreshToken: Longa duração.
+
+### Fluxo de Renovação Automática (Frontend)
+O cliente (React) implementa um Interseptor:
+1. requisição `401`.
+2. O sistema entra em modo `isRefreshing`, enfileirando as demais requisições pendentes.
+3. É feita uma chamada automática ao endpoint `/auth/refresh-token`.
+4. 200 o sistema atualiza o `localStorage` e reprocessa todas as requisições da fila.
+5. Caso o Refresh Token também esteja expirado, o usuário é redirecionado para o `/login`.
+
+### Principais Endpoints de Auth
+| `POST` | `/auth/login` | Autentica usuário e gera tokens exemplo no body.
+{
+"username": "admin",
+"password": "password"
+}
+| `POST` | `/auth/refresh-token` | Renova o par de tokens. | passar no header `refresh-token` + refreshToken
 ```
 
 ---
