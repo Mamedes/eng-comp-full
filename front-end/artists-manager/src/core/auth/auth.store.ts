@@ -22,6 +22,7 @@ export const authActions = {
   },
   logout() {
     localStorage.removeItem("auth_token");
+    localStorage.removeItem("refresh_token");
     authState$.next({
       token: null,
       isAuthenticated: false,

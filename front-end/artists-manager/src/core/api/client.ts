@@ -63,16 +63,30 @@ httpClient.interceptors.response.use(
             },
           )
           .then(({ data }) => {
+            localStorage.setItem("auth_token", data.accessToken);
+            localStorage.setItem("refresh_token", data.refreshToken);
+
             authActions.update({
               token: data.accessToken,
               isAuthenticated: true,
             });
+
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+            }
 
             processQueue(null, data.accessToken);
             resolve(httpClient(originalRequest));
           })
           .catch((err) => {
             processQueue(err, null);
+
+            authActions.logout();
+
+            if (typeof window !== "undefined") {
+              window.location.href = "/login";
+            }
+
             reject(err);
           })
           .finally(() => {
