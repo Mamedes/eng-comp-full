@@ -4,6 +4,7 @@ export const API_BASE_URL =
 const ARTISTA_BASE = "/v1/artista";
 const ALBUM_BASE = "/v1/album";
 const AUTH_BASE = "/v1/auth";
+const ALBUM_IMAGE_BASE = "/v1/album-imagem";
 
 export const API_ENDPOINTS = {
   AUTH: {
@@ -21,9 +22,13 @@ export const API_ENDPOINTS = {
     BASE: ALBUM_BASE,
     BY_ID: (id: number | string) => `${ALBUM_BASE}/${id}`,
     UPLOAD_COVER: (albumId: number | string) => `${ALBUM_BASE}/${albumId}/capa`,
+    DETAILS: () => `${ALBUM_BASE}/detalhe`,
   },
   SOCKET: {
     ENDPOINT: `${API_BASE_URL}/v1/ws-seletivo`,
+  },
+  ALBUMS_IMAGE: {
+    BASE: ALBUM_IMAGE_BASE,
   },
   HEALTH: {
     STATUS: "/actuator/health",
