@@ -263,8 +263,7 @@ O cliente (React) implementa um Interseptor:
 
 ---
 
-##  Sicronização Regionais
-
+##  Estratégia de Testes
 ```text
 Novo no endpoint→ Inserir novo registro com ativo = true
 
