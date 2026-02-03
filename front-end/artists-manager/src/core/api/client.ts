@@ -32,9 +32,10 @@ httpClient.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
+
     const isAuthRoute =
       originalRequest.url?.includes(API_ENDPOINTS.AUTH.LOGIN) ||
-      originalRequest.url?.includes("/auth/refresh-token");
+      originalRequest.url?.includes(API_ENDPOINTS.AUTH.REFRESH);
 
     if (
       error.response?.status === 401 &&
@@ -56,10 +57,11 @@ httpClient.interceptors.response.use(
       isRefreshing = true;
 
       const refreshToken = localStorage.getItem("refresh_token");
+
       return new Promise((resolve, reject) => {
         axios
           .post(
-            `${API_BASE_URL}/auth/refresh-token`,
+            `${API_BASE_URL}${API_ENDPOINTS.AUTH.REFRESH}`,
             {},
             {
               headers: {
@@ -86,6 +88,9 @@ httpClient.interceptors.response.use(
           })
           .catch((err) => {
             processQueue(err, null);
+
+            localStorage.removeItem("auth_token");
+            localStorage.removeItem("refresh_token");
 
             authActions.logout();
 
