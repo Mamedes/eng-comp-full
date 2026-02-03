@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping(value = "album-imagem")
+@RequestMapping(value = "v1/album-imagem")
 @Tag(name = "Album Imagem")
 public interface AlbumImagemAPI {
 

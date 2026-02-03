@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RequestMapping(value = "artista")
+@RequestMapping(value = "v1/artista")
 public interface ArtistaAPI {
 
     @PostMapping(

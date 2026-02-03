@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-@RequestMapping(value = "album")
+@RequestMapping(value = "v1/album")
 public interface AlbumAPI {
 
     @PostMapping(

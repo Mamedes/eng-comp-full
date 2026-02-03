@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping(value = "auth")
+@RequestMapping(value = "v1/auth")
 @Tag(name = "1. Autenticação", description = "Gerenciamento de token")
 public interface
 

@@ -68,7 +68,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> {
                     authorize
-                            .requestMatchers("/auth/**").permitAll()
+                            .requestMatchers("v1/auth/**").permitAll()
                             .requestMatchers("/error").permitAll()
                             .requestMatchers("/swagger-ui.html").permitAll()
                             .requestMatchers("/swagger-ui/**").permitAll()
@@ -76,7 +76,7 @@ public class SecurityConfig {
                             .requestMatchers("/content/**").permitAll()
                             .requestMatchers("/swagger-resources/**").permitAll()
                             .requestMatchers(HttpMethod.GET, "/v3/**").permitAll()
-                            .requestMatchers("/ws-seletivo/**").permitAll()
+                            .requestMatchers("/v1/ws-seletivo/**").permitAll()
                             .requestMatchers("/actuator/health/**").permitAll()
                             .requestMatchers("/actuator/info").permitAll()
                             .anyRequest().authenticated();
