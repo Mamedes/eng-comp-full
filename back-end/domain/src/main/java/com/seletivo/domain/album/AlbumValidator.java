@@ -17,7 +17,7 @@ public class AlbumValidator extends Validator {
     @Override
     public void validate() {
         if (this.album.getTitulo() == null || this.album.getTitulo().isBlank()) {
-            this.validationHandler().append(new Error("'nome' should not be empty"));
+            this.validationHandler().append(new Error("'albumTitulo' should not be empty"));
         }
 
     }
