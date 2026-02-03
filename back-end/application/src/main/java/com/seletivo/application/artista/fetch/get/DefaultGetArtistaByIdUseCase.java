@@ -3,7 +3,6 @@ package com.seletivo.application.artista.fetch.get;
 import com.seletivo.application.artista.fetch.ArtistaOutput;
 import com.seletivo.domain.artista.Artista;
 import com.seletivo.domain.artista.ArtistaGateway;
-import com.seletivo.domain.artista.ArtistaID;
 import com.seletivo.domain.exceptions.NotFoundException;
 import java.util.Objects;
 import java.util.UUID;

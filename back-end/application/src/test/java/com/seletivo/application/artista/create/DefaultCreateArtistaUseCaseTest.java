@@ -1,7 +1,5 @@
-package com.seletivo.domain.artista.create;
+package com.seletivo.application.artista.create;
 
-import com.seletivo.application.artista.create.CreateArtistaCommand;
-import com.seletivo.application.artista.create.DefaultCreateArtistaUseCase;
 import com.seletivo.domain.artista.ArtistaGateway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

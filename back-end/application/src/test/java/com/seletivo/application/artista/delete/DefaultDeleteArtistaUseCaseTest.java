@@ -1,6 +1,5 @@
-package com.seletivo.domain.artista.delete;
+package com.seletivo.application.artista.delete;
 
-import com.seletivo.application.artista.delete.DefaultDeleteArtistaUseCase;
 import com.seletivo.domain.artista.ArtistaGateway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

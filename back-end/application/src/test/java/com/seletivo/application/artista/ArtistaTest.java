@@ -1,5 +1,6 @@
-package com.seletivo.domain.artista;
+package com.seletivo.application.artista;
 
+import com.seletivo.domain.artista.Artista;
 import com.seletivo.domain.validation.handler.Notification;
 import org.junit.jupiter.api.Test;
 

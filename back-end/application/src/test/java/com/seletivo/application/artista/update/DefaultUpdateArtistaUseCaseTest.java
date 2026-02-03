@@ -1,7 +1,5 @@
-package com.seletivo.domain.artista.update;
+package com.seletivo.application.artista.update;
 
-import com.seletivo.application.artista.update.DefaultUpdateArtistaUseCase;
-import com.seletivo.application.artista.update.UpdateArtistaCommand;
 import com.seletivo.domain.artista.Artista;
 import com.seletivo.domain.artista.ArtistaGateway;
 import com.seletivo.domain.exceptions.NotFoundException;
