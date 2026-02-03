@@ -17,7 +17,7 @@ API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, á
 * [Segurança e Autenticação](#-segurança-e-autenticação)
 * [Monitoramento e Health Checks](#-monitoramento-e-health-checks)
 * [Sincronização de Regionais](#-sicronizacao-regionais)
-
+* [Estratégia de Testes](#-estrategia-testes)
 ---
 
 ##  Visão Geral
@@ -130,7 +130,7 @@ cd infra
 mvn spring-boot:run
 ```
 
-### Executar testes
+### Executar testes Local
 
 ```bash
 mvn clean test
@@ -296,6 +296,24 @@ POST /v1/regionais/sync
 }
 
 ```
+##  Sicronização Regionais
+
+```text
+Testeste de Unitarios (Application & Domain)
+Tecnologias: JUnit 5, Mockito.
+
+O que é testado:
+
+Criação, atualização e deleção de álbuns e artistas.
+
+Validações de campos obrigatórios e regras de notificação de erros.
+
+Garantia de que o secureId (UUID) é gerado e mantido corretamente.
+
+Testeste de Integração (Infra)
+Mocks de Dependências: Nos testes de Caso de Uso (ex: DefaultCreateAlbumUseCaseTest), utilizamos o Mockito para simular o comportamento dos Gateways e do serviço de notificação, isolando a regra de negócio.
+```
+
 
 ---
 
