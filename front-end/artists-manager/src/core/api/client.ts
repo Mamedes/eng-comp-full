@@ -32,9 +32,15 @@ httpClient.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
     };
+    const isAuthRoute =
+      originalRequest.url?.includes(API_ENDPOINTS.AUTH.LOGIN) ||
+      originalRequest.url?.includes("/auth/refresh-token");
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !isAuthRoute
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
