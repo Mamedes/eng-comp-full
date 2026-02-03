@@ -6,6 +6,7 @@ import {
   AlbumImage,
   CreateAlbumDTO,
 } from "../types";
+import { API_ENDPOINTS } from "@/core/constants/api.constants";
 
 export const AlbumService = {
   listAll: async (params: {
@@ -13,15 +14,18 @@ export const AlbumService = {
     perPage: number;
     search?: string;
   }) => {
-    const { data } = await httpClient.get<PaginatedResponse<Album>>("/album", {
-      params: {
-        page: params.page,
-        perPage: params.perPage,
-        search: params.search,
-        sort: "titulo",
-        dir: "asc",
+    const { data } = await httpClient.get<PaginatedResponse<Album>>(
+      API_ENDPOINTS.ALBUMS.BASE,
+      {
+        params: {
+          page: params.page,
+          perPage: params.perPage,
+          search: params.search,
+          sort: "titulo",
+          dir: "asc",
+        },
       },
-    });
+    );
     return data;
   },
   getDashboard: async (params: {
@@ -31,7 +35,7 @@ export const AlbumService = {
   }) => {
     const { data } = await httpClient.get<
       PaginatedResponse<AlbumDashboardItem>
-    >("/album/details", {
+    >(`${API_ENDPOINTS.ALBUMS.DETAILS()}`, {
       params: {
         page: params.page,
         perPage: params.perPage,
@@ -44,24 +48,29 @@ export const AlbumService = {
   },
 
   create: async (payload: CreateAlbumDTO) => {
-    const { data } = await httpClient.post("/album", payload);
+    const { data } = await httpClient.post(API_ENDPOINTS.ALBUMS.BASE, payload);
     return data;
   },
 
   getImages: async (albumId: string) => {
     const { data } = await httpClient.get<AlbumImage[]>(
-      `/album-imagem/album/${albumId}`,
+      `${API_ENDPOINTS.ALBUMS_IMAGE.BASE}/album/${albumId}`,
     );
     return data;
   },
 
   update: async (id: string, payload: CreateAlbumDTO) => {
-    const { data } = await httpClient.put(`/album/${id}`, payload);
+    const { data } = await httpClient.put(
+      `${API_ENDPOINTS.ALBUMS.BASE}/${id}`,
+      payload,
+    );
     return data;
   },
 
   delete: async (id: string) => {
-    const { data } = await httpClient.delete(`/album/${id}`);
+    const { data } = await httpClient.delete(
+      `${API_ENDPOINTS.ALBUMS.BASE}/${id}`,
+    );
     return data;
   },
   uploadImages: async (albumId: string, files: File[]) => {
@@ -72,7 +81,7 @@ export const AlbumService = {
       formData.append("files", file);
     });
 
-    const { data } = await httpClient.post("/album-imagem", formData, {
+    const { data } = await httpClient.post(API_ENDPOINTS.ALBUMS_IMAGE.BASE, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -80,6 +89,8 @@ export const AlbumService = {
     return data;
   },
   deleteImage: async (albumImageId: string) => {
-    await httpClient.delete(`/album-imagem/${albumImageId}`);
+    await httpClient.delete(
+      `${API_ENDPOINTS.ALBUMS_IMAGE.BASE}/${albumImageId}`,
+    );
   },
 };
