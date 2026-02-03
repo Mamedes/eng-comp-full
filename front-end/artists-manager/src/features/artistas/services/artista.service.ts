@@ -20,14 +20,15 @@ export const ArtistaService = {
     page: number;
     perPage: number;
     search?: string;
+    sort?: string;
+    dir?: string;
   }) => {
     const { data } = await httpClient.get(API_ENDPOINTS.ARTISTAS.DASHBOARD, {
       params: {
         page: params.page,
         perPage: params.perPage,
-        search: params.search,
-        sort: "nome",
-        dir: "asc",
+        sort: params.sort || "nome",
+        dir: params.dir || "asc",
       },
     });
     return data;
@@ -46,10 +47,10 @@ export const ArtistaService = {
     );
     return response.data;
   },
-getDetails: async (id: string): Promise<ArtistaDetalhe> => {
-  const { data } = await httpClient.get<ArtistaDetalhe>(
-    `${API_ENDPOINTS.ARTISTAS.BY_ID(id)}/detalhe`
-  );
-  return data;
-},
+  getDetails: async (id: string): Promise<ArtistaDetalhe> => {
+    const { data } = await httpClient.get<ArtistaDetalhe>(
+      `${API_ENDPOINTS.ARTISTAS.BY_ID(id)}/detalhe`,
+    );
+    return data;
+  },
 };

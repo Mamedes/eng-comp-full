@@ -12,6 +12,8 @@ export interface ArtistaState {
   };
   isLoading: boolean;
   search: string;
+  sort: string;
+  dir: "asc" | "desc";
 }
 
 const initialState: ArtistaState = {
@@ -24,6 +26,8 @@ const initialState: ArtistaState = {
   },
   isLoading: false,
   search: "",
+  sort: "nome",
+  dir: "asc",
 };
 
 export const artistaState$ = new BehaviorSubject<ArtistaState>(initialState);
@@ -59,5 +63,12 @@ export const artistaActions = {
     artistaState$.next({
       ...artistaState$.value,
       pagination: { ...artistaState$.value.pagination, page },
+    }),
+  setSorting: (sort: string, dir: "asc" | "desc") =>
+    artistaState$.next({
+      ...artistaState$.value,
+      sort,
+      dir,
+      pagination: { ...artistaState$.value.pagination, page: 0 },
     }),
 };

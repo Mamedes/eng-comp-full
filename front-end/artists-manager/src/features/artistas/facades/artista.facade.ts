@@ -1,13 +1,11 @@
-import {
-  debounceTime,
-  distinctUntilChanged,
-} from "rxjs/operators";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { artistaActions, artistaState$ } from "../state/artista.store";
 import { ArtistaService } from "../services/artista.service";
 import { toast } from "react-toastify";
 import { ArtistaFormData } from "../types";
 
+const triggerReload$ = new Subject<void>();
 const searchSubject = new Subject<string>();
 
 searchSubject
@@ -22,6 +20,12 @@ export const artistaFacade = {
 
   updateSearch(term: string) {
     searchSubject.next(term);
+  },
+  updateSorting(column: string) {
+    const { sort, dir } = artistaState$.value;
+    const newDir = sort === column && dir === "asc" ? "desc" : "asc";
+    artistaActions.setSorting(column, newDir);
+    this.loadArtistas();
   },
 
   changePage(page: number) {
@@ -46,9 +50,11 @@ export const artistaFacade = {
       const { search } = state;
 
       const response = await ArtistaService.getDashboard({
-        page,
-        perPage,
-        search: search,
+        page: state.pagination.page,
+        perPage: state.pagination.perPage,
+        search: state.search,
+        sort: state.sort,
+        dir: state.dir,
       });
 
       artistaActions.setData(response);

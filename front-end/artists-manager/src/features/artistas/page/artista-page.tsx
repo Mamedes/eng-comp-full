@@ -74,6 +74,13 @@ export default function ArtistPage() {
                             onChange={(e) => artistaFacade.updateSearch(e.target.value)}
                         />
                     </div>
+                    <select
+                        className="bg-zinc-900 border border-white/10 rounded-xl px-4 py-2 text-sm text-zinc-400 outline-none focus:ring-2 focus:ring-purple-500"
+                        onChange={(e) => artistaFacade.updateSorting(e.target.value)}
+                    >
+                        <option value="nome">Ordenar por Nome</option>
+                        <option value="quantidadeAlbuns">Mais Álbuns</option>
+                    </select>
                     <button
                         onClick={handleNew}
                         className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg shadow-purple-900/20">
