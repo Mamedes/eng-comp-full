@@ -28,13 +28,15 @@ public interface AlbumRepository extends JpaRepository<AlbumJpaEntity, Long> {
         INNER JOIN artista art ON aa.artista_id = art.id
         WHERE (:query IS NULL 
            OR al.titulo ILIKE %:query% 
-           OR art.nome ILIKE %:query%)
+           OR art.nome ILIKE %:query%
+           OR art.tipo ILIKE %:query%)
+            
     """,
             countQuery = """
         SELECT count(*) FROM album al
         INNER JOIN album_artista aa ON al.id = aa.album_id
         INNER JOIN artista art ON aa.artista_id = art.id
-        WHERE (:query IS NULL OR al.titulo ILIKE %:query% OR art.nome ILIKE %:query%)
+        WHERE (:query IS NULL OR al.titulo ILIKE %:query% OR art.nome ILIKE %:query% OR art.tipo ILIKE %:query%)
     """,
             nativeQuery = true)
     Page<AlbumArtistasProjection> findAllWithArtistas(
