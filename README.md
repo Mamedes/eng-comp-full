@@ -1,3 +1,13 @@
+
+| Campo                  | Valor                                                                    |
+|------------------------|--------------------------------------------------------------------------|
+| **Edital**             | Processo Seletivo CONJUNTO Nº 001/2026/ SEPLAG                           |
+| **cargo**              | Analista de Tecnologia da Informação - Engenheiro da Computação - Sênior |
+| **Candidato**          | Mamedes Eronildes de Castro Junior                                       |
+| **N° Inscrição**       | 16284                                                                    |
+| **Projeto**            | Projeto Full Stack                                                       |
+| **Usuario pra teste**  | admin                                                                    |
+| **Senha**              | password                                                                 |
 API desenvolvida em **Java 21 + Spring Boot** para gerenciamento de artistas, álbuns e imagens associadas, com persistência relacional e armazenamento de imagens em **S3 (MinIO)**.
 
 ---
