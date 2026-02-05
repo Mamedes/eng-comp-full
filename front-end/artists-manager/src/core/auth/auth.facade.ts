@@ -24,6 +24,7 @@ export const authFacade = {
         isAuthenticated: true,
         isAuthLoading: false,
       });
+      window.location.replace("/app");
     } catch (error) {
       authActions.update({ isAuthLoading: false });
       throw mapAuthError(error);
@@ -32,5 +33,6 @@ export const authFacade = {
 
   logout() {
     authActions.logout();
+    window.location.replace("/login");
   },
 };
