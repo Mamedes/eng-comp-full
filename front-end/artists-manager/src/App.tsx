@@ -1,35 +1,25 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { authFacade } from '@/core/auth/auth.facade';
 import { useObservable } from '@/shared/hooks/use-observable';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import LoginPage from './features/auth/pages/login-page';
-import { FullScreenLoader } from './shared/components/full-screan-loader';
-import ArtistPage from './features/artistas/page/artista-page';
-import { initialAuthState } from './core/auth/auth.store';
-import { Loader2 } from 'lucide-react';
-import { AppLayout } from './features/layout/components/app-layout';
-import AlbumsPage from './features/albums/pages/album-page';
-import { initNotificationSocket, notification$ } from './core/services/notifacation.service';
 import { useEffect } from 'react';
-import StatusPage from './features/heath/page/status-page';
+import { authState$, initialAuthState } from './core/auth/auth.store';
+import { initNotificationSocket, notification$ } from './core/services/notifacation.service';
+import AlbumsPage from './features/albums/pages/album-page';
 import ArtistDetailPage from './features/artistas/page/artista-detalhe-page';
+import ArtistPage from './features/artistas/page/artista-page';
+import LoginPage from './features/auth/pages/login-page';
+import StatusPage from './features/heath/page/status-page';
+import { AppLayout } from './features/layout/components/app-layout';
+import { FullScreenLoader } from './shared/components/full-screan-loader';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isAppLoading } = useObservable(authFacade.state$, {
-    token: null,
-    isAuthenticated: false,
-    isAuthLoading: false,
-    isAppLoading: true,
-  });
+  const { isAuthenticated, isAppLoading } = useObservable(authFacade.state$, authState$.value);
 
   if (isAppLoading) {
-    return (
-      <div className="h-screen w-screen bg-zinc-950 flex items-center justify-center">
-        <Loader2 className="animate-spin text-white h-8 w-8" />
-      </div>
-    );
+    return <FullScreenLoader />;
   }
 
   if (!isAuthenticated) {
