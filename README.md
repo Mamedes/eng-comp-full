@@ -39,6 +39,9 @@ O backend segue uma separação em camadas inspirada em **Clean Architecture**:
 * **domain** → Entidades e regras de negócio
 * **application** → Casos de uso e serviços
 * **infra** → Controllers, repositórios, integrações externas e configurações
+* Programação Funcional com Vavr: Uso da classe Either para tratamento de erros expressivo, separando fluxos de sucesso (Right) e falha (Left) de forma declarativa.
+* Notification Pattern: Em vez de disparar exceções custosas, a aplicação utiliza o padrão Notification para coletar e retornar todos os erros de validação de uma vez.
+* Gateway Pattern: Interfaces como ArtistaGateway e ArtistaQueryGateway desacoplam a lógica de negócio do banco de dados, permitindo trocas tecnológicas sem impacto no domínio.
 
 O projeto utiliza **Maven multi-módulo**, com build centralizado no POM pai.
 
@@ -298,7 +301,7 @@ POST /v1/regionais/sync
 ##  Estratégia de Testes
 
 ```text
-Testeste de Unitarios (Application & Domain)
+Teste de Unitarios (Application & Domain)
 Tecnologias: JUnit 5, Mockito.
 
 O que é testado:
@@ -309,10 +312,42 @@ Validações de campos obrigatórios e regras de notificação de erros.
 
 Garantia de que o secureId (UUID) é gerado e mantido corretamente.
 
-Testeste de Integração (Infra)
+Teste de Integração (Infra)
 Mocks de Dependências: Nos testes de Caso de Uso (ex: DefaultCreateAlbumUseCaseTest), utilizamos o Mockito para simular o comportamento dos Gateways e do serviço de notificação, isolando a regra de negócio.
-```
 
+## Estratégia de Testes - Frontend
+
+Os testes foram implementados utilizando **Vitest** pela performance e compatibilidade com Vite.
+
+* **Testes de Store (Estado):** Validam a integridade do estado global, garantindo que mutações, paginação e carregamento funcionem conforme o esperado.
+* **Testes de Facade:** Garantem que a lógica de orquestração (ex: alternar ordenação ASC/DESC) dispare as ações corretas nos serviços e stores.
+* **Testes de Serviço:** Validam as chamadas HTTP e a correta passagem de parâmetros para a API.
+* **Testes de Infraestrutura (HTTP Client):** Utiliza **MSW** para simular cenários reais de rede, como a renovação automática de tokens após erro `401 Unauthorized`.
+
+### Como executar os testes
+```bash
+# No diretório do frontend:
+npm test         # Executa os testes uma vez
+npm run test:ui  # Abre a interface visual do Vitest
+```
+##  Checklist de Requisitos
+
+### Backend
+- [x] Java 21 / Spring Boot 3 + Docker Compose.
+- [x] Autenticação JWT (5 min) + Refresh Token.
+- [x] CRUD completo (POST, PUT, GET, DELETE).
+- [x] Paginação e filtros de busca (ASC/DESC).
+- [x] Integração S3 (MinIO) com Presigned URLs (30 min).
+- [x] Flyway Migrations.
+- [x] Rate Limit (10 req/min).
+- [x] WebSocket para notificações de novos álbuns.
+- [x] Health Checks (Liveness/Readiness).
+
+### Frontend
+- [x] React + TypeScript + Tailwind CSS.
+- [x] Gestão de estado com BehaviorSubject.
+- [x] Lazy Loading e Rotas protegidas.
+- [x] Upload de imagens e listagem responsiva.
 
 ---
 
